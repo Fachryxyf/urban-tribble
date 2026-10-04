@@ -1,7 +1,7 @@
 /**
  * agentManager.ts
  *
- * Agent lifecycle helpers for the Agent Office visualiser.
+ * Agent lifecycle helpers for the Urban Tribble Office visualiser.
  *
  * Lifecycle:
  *   1. agent_spawned  → new-hire state → walk from door to assigned desk

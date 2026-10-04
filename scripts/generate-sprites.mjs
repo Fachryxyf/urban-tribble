@@ -91,7 +91,7 @@ async function generateWalkAnimation(char) {
 }
 
 async function main() {
-  console.log('🏢 Agent Office Sprite Generator')
+  console.log('🏢 Urban Tribble Sprite Generator')
   console.log('=================================\n')
 
   const balance = await checkBalance()

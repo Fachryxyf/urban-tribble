@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 # =============================================================================
-# agent-tracker.sh — Claude Code Hook → Agent Office bridge
+# agent-tracker.sh — Claude Code Hook → Urban Tribble Office bridge
 #
 # Claude Code passes hook event JSON on stdin.
 # This script inspects the event and forwards relevant activity to the
-# Agent Office server at http://localhost:3334/event.
+# Urban Tribble Office server at http://localhost:3334/event.
 #
 # Hook events handled:
 #   PreToolUse  — detect Agent tool calls, MCP tool calls

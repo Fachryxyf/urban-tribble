@@ -172,29 +172,28 @@ export function themedDisplayName(role: string, fallback: string): string {
 
 const OFFICE_SPAWN = [
   'Identity theft is not a joke, Jim!',
-  'reporting to Scranton branch',
-  'paper, paper, paper',
+  'lapor ke cabang Scranton',
+  'kertas, kertas, kertas',
   'Bears. Beets. Battlestar Galactica.',
   'D to the U to the N to the...',
   'I am Beyoncé, always.',
-  'clocked in, Dunder Mifflin style',
+  'clocked in, gaya Dunder Mifflin',
 ]
 const OFFICE_WORK = [
-  'selling paper',
-  'processing reams',
-  'false. black bears.',
-  'Schrute bucks awarded',
-  'negotiating with corporate',
-  'filing TPS reports',
-  'Finer Things Club newsletter',
+  'lagi jual kertas',
+  'proses rim kertas',
+  'kasih Schrute bucks',
+  'negosiasi sama kantor pusat',
+  'arsip laporan TPS',
+  'buletin Finer Things Club',
 ]
 const OFFICE_DONE = [
-  "that's what she said",
+  'beres, tanda tangan di sini',
   'boom. roasted.',
-  'PR shipped like 24lb bond',
-  "World's Best Boss approves",
-  'closed the deal',
-  'merged — Jim-approved',
+  'kirim seperti kertas 24lb',
+  'disetujui Bos Terbaik Dunia',
+  'deal ditutup',
+  'selesai — approval-nya Jim',
 ]
 const OFFICE_COFFEE = [
   'grande latte from Jim',
@@ -210,21 +209,21 @@ const OFFICE_WATER = [
 ]
 
 const DEFAULT_SPAWN = [
-  'reporting for duty!', 'clocked in', 'ready to ship',
-  'coffee first, then code', "let's do this", 'opening vim...', 'pulling latest main',
+  'lapor diri!', 'siap kerja', 'absen hadir ✅',
+  'kopi dulu, baru kerja', "gas mulai", 'buka email...', 'cek inbox dulu',
 ]
 const DEFAULT_WORK = [
-  'on it', 'typing furiously', 'in the zone', 'making progress',
-  'checking the docs', 'git blame time', 'stack overflow to the rescue',
+  'dikerjakan', 'lagi fokus', 'proses sebentar', 'sedang beres',
+  'cek dokumen dulu', 'rekap data', 'tunggu bentar ya',
 ]
 const DEFAULT_DONE = [
-  'task complete!', 'shipped it', 'PR opened', 'done and dusted',
-  'LGTM', 'merged to main', 'deployed',
+  'selesai!', 'beres ✅', 'siap kirim', 'tuntas',
+  'done, next!', 'gas lanjut', 'laporan dikirim',
 ]
-const DEFAULT_COFFEE = ['brb, coffee', 'need caffeine', 'grabbing a cup', 'coffee run']
+const DEFAULT_COFFEE = ['ngopi dulu', 'butuh kopi', 'ambil kopi', 'rehat kopi']
 const DEFAULT_WATER = [
-  'stay hydrated', 'h2o break', 'water run', 'refilling bottle',
-  'hydration check', 'quick water break',
+  'minum dulu', 'isi air', 'rehat sebentar', 'isi botol',
+  'cek hidrasi', 'jalan ke dispenser',
 ]
 
 export function themedSpawn(): string  { return pick(state.name === 'office' ? OFFICE_SPAWN  : DEFAULT_SPAWN) }
@@ -236,41 +235,41 @@ export function themedWater(): string  { return pick(state.name === 'office' ? O
 // ===== SIM / VIDEO MODE OFFICE SCRIPT =====
 // Parallel tool-output messages keyed by role — used when ?sim or ?video loads with Office theme.
 export const OFFICE_SIM_TOOL_MESSAGES: Record<string, string[]> = {
-  'security-auditor': [
-    '⚡ auditing middleware for season-nine vulnerabilities',
-    '⚠️ Dwight stored session tokens in his beet cellar',
-    '🚨 JWT refresh token has expiry of "never" — classic',
-    'moving everything to httpOnly before Toby finds out',
+  'keuangan': [
+    '⚡ rekap invoice bulan Maret...',
+    '⚠️ ada angka nyasar di laporan — kayaknya salah ketik',
+    '🚨 budget kopi habis. lagi. klasik.',
+    'cek ulang sebelum Toby... eh, sebelum direksi tahu',
   ],
-  'code-reviewer': [
-    '⚡ running: grep -r "that\'s what she said" src/',
-    '🔍 reviewing — this PR has more drama than the Dundies',
-    '💡 suggesting httpOnly cookies — not localStorage, this isn\'t Schrute Farms',
-    'lgtm, ship it to Stamford branch',
+  'hrd': [
+    '⚡ absen pagi dicek satu-satu',
+    '📋 3 pengajuan cuti menunggu approval',
+    '🔍 kandidat interview sore nanti — 2 orang',
+    'slip gaji sudah dibagikan, stanley komplain lagi',
   ],
-  'frontend-developer': [
-    '⚡ editing src/auth/tokenStore.ts',
-    '🎨 new login screen looks better than Phyllis\'s wedding',
-    'I can handle the cookie migration, no big deal',
-    'responsive on mobile — even Stanley approves',
+  'admin': [
+    '⚡ arsip surat masuk diproses',
+    '🖨️ cetak & stempel beres',
+    '📁 filing dokumen vendor sudah rapi',
+    'surat keluar siap dikirim ke cabang',
   ],
   'assistant': [
-    'the printer jammed again. third time today. Sabre strikes.',
-    'someone check on Michael, he\'s monologuing',
-    "I'll handle it — identity theft is not a joke",
+    'printer macet lagi. ketiga kalinya hari ini. kesabaran habis.',
+    'cek Michael di ruang rapat, dia monolog lagi',
+    'aku yang urus — identity theft is not a joke',
   ],
   'boss': [
-    'pizza in the lobby! it\'s pretzel day!',
-    'anyone want a Red Bull? or a Schrute Buck?',
-    'ship it, we\'ll fix it in prod. PARKOUR!',
-    'how are we looking on the dashboard?',
+    'pizza di lobi! hari pretzel!',
+    'ada yang mau Red Bull? atau Schrute Buck?',
+    'beresin dulu, rapat besok. PARKOUR!',
+    'gimana angka di dashboard kita?',
   ],
 }
 
 /** Sim replacement for Antony's typed questions, when theme is Office */
 export const OFFICE_SIM_BOSS_PROMPTS = [
-  '/ultra-think audit our authentication like Dwight auditing the beet farm',
-  'how bad is the localStorage issue — worse than Kevin dropping the chili?',
+  '/rekap keuangan kayak Dwight audit kebun bit',
+  'parah gak angka penjualan kita — lebih parah Kevin jatuhin chili?',
 ]
 
 // ===== Rotation helpers for the Office ?sim rotation =====

@@ -1,5 +1,5 @@
 /**
- * useAgentSocket — React hook for the Agent Office WebSocket connection.
+ * useAgentSocket — React hook for the Urban Tribble Office WebSocket connection.
  *
  * Connects to ws://localhost:3334/ws, receives real-time agent events from the
  * Claude Code hook pipeline, and exposes them to the React tree.

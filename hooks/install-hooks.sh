@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # =============================================================================
-# install-hooks.sh — Add Agent Office hook to ~/.claude/settings.json
+# install-hooks.sh — Add Urban Tribble Office hook to ~/.claude/settings.json
 #
 # This script:
 #   1. Backs up the existing settings file
@@ -27,7 +27,7 @@ RESET='\033[0m'
 
 echo ""
 echo -e "${CYAN}╔═══════════════════════════════════════════╗${RESET}"
-echo -e "${CYAN}║    Agent Office — Hook Installer          ║${RESET}"
+echo -e "${CYAN}║    Urban Tribble Office — Hook Installer          ║${RESET}"
 echo -e "${CYAN}╚═══════════════════════════════════════════╝${RESET}"
 echo ""
 
@@ -36,7 +36,7 @@ echo ""
 # ---------------------------------------------------------------------------
 if [ ! -f "$TRACKER_SCRIPT" ]; then
     echo -e "${RED}[error]${RESET} Tracker script not found: $TRACKER_SCRIPT"
-    echo "        Make sure you run this from the agent-office project directory."
+    echo "        Make sure you run this from the urban-tribble project directory."
     exit 1
 fi
 
@@ -68,7 +68,7 @@ echo -e "${GREEN}[ok]${RESET} Backup saved: $BACKUP_FILE"
 # ---------------------------------------------------------------------------
 if grep -q "agent-tracker.sh" "$SETTINGS_FILE" 2>/dev/null; then
     echo ""
-    echo -e "${YELLOW}[info]${RESET} Agent Office hook is already installed in $SETTINGS_FILE"
+    echo -e "${YELLOW}[info]${RESET} Urban Tribble Office hook is already installed in $SETTINGS_FILE"
     echo ""
     echo "  To update it, remove the existing entry and re-run this script."
     echo ""
@@ -135,11 +135,11 @@ echo -e "${GREEN}Installation complete!${RESET}"
 echo ""
 echo "Next steps:"
 echo ""
-echo "  1. Start the Agent Office server:"
+echo "  1. Start the Urban Tribble Office server:"
 echo "       cd $(dirname "$SCRIPT_DIR")"
 echo "       npm run server"
 echo ""
-echo "  2. Start the Agent Office UI:"
+echo "  2. Start the Urban Tribble Office UI:"
 echo "       npm run dev           # browser"
 echo "       npm run dev:electron  # desktop app"
 echo ""

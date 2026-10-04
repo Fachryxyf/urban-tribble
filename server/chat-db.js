@@ -1,5 +1,5 @@
 /**
- * chat-db.js - SQLite-backed chat history for Agent Office
+ * chat-db.js - SQLite-backed chat history for Urban Tribble Office
  *
  * DB location: ~/.agent-office/chat.db
  * Uses WAL mode for concurrent read performance.

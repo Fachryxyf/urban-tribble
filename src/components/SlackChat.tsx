@@ -9,7 +9,7 @@ function getAvatarSrc(role: string, agentId?: string): string {
 }
 
 // Proactive message detection: agent announcements about starting/completing work
-const PROACTIVE_PATTERN = /\b(starting|started|done|finished|completed|ready|working on|picking up|taking over)\b/i
+const PROACTIVE_PATTERN = /\b(starting|started|done|finished|completed|ready|working on|picking up|taking over|mulai|selesai|sedang|siap|dikerjakan|tuntas)\b/i
 
 export interface ChatMessage {
   id: number
@@ -133,19 +133,19 @@ const SlackChat: React.FC<SlackChatProps> = ({ messages, muted, volume, onToggle
     <div className="slack-panel">
       <div className="slack-header">
         <div className="slack-channel-icon">#</div>
-        <span className="slack-channel-name">office-general</span>
+        <span className="slack-channel-name">kantor-umum</span>
         <div className="slack-header-right">
           <div className="slack-online-dot" />
           <span className="slack-online-count">{onlineCount}</span>
           <div
             className={`slack-cron-toggle ${cronPaused ? 'paused' : 'active'}`}
             onClick={toggleCron}
-            title={cronPaused ? 'Chat monitor paused — click to resume' : 'Chat monitor active — click to pause'}
+            title={cronPaused ? 'Monitor chat dijeda — klik untuk lanjut' : 'Monitor chat aktif — klik untuk jeda'}
           >
             <div className="slack-cron-track">
               <div className="slack-cron-thumb" />
             </div>
-            <span className="slack-cron-label">{cronPaused ? 'AI Off' : 'AI On'}</span>
+            <span className="slack-cron-label">{cronPaused ? 'AI Mati' : 'AI Hidup'}</span>
           </div>
           <button className="slack-mute-btn" onClick={onToggleMute}>
             {muted ? '🔇' : volume < 0.4 ? '🔈' : '🔊'}
@@ -206,7 +206,7 @@ const SlackChat: React.FC<SlackChatProps> = ({ messages, muted, volume, onToggle
                           key={i}
                           className="slack-reaction"
                           onClick={() => handleReaction(msg, r)}
-                          title="Click to remove"
+                          title="Klik untuk hapus"
                         >{r}</span>
                       ))}
                     </div>
@@ -226,7 +226,7 @@ const SlackChat: React.FC<SlackChatProps> = ({ messages, muted, volume, onToggle
               </div>
               {lastSeenId != null && msg.id === lastSeenId && (
                 <div className="slack-seen-row">
-                  <span className="slack-seen-label">Seen</span>
+                  <span className="slack-seen-label">Dilihat</span>
                   <img src={getAvatarSrc('assistant')} className="slack-seen-avatar" alt="seen" />
                 </div>
               )}
@@ -239,7 +239,7 @@ const SlackChat: React.FC<SlackChatProps> = ({ messages, muted, volume, onToggle
               <img src={getAvatarSrc('assistant')} alt="typing" className="slack-avatar-img" />
             </div>
             <div className="slack-msg-content">
-              <div className="slack-typing-label">{typingUser} is typing</div>
+              <div className="slack-typing-label">{typingUser} sedang mengetik</div>
               <div className="slack-typing-dots"><span/><span/><span/></div>
             </div>
           </div>
@@ -249,9 +249,10 @@ const SlackChat: React.FC<SlackChatProps> = ({ messages, muted, volume, onToggle
       <div className="slack-input-wrap">
         {showSlashHint && (
           <div className="slack-slash-hint">
-            <span className="slack-slash-cmd">/status</span>
-            <span className="slack-slash-cmd">/agents</span>
-            <span className="slack-slash-cmd">/help</span>
+            <span className="slack-slash-cmd">/laporan</span>
+            <span className="slack-slash-cmd">/tim</span>
+            <span className="slack-slash-cmd">/hapus</span>
+            <span className="slack-slash-cmd">/bantuan</span>
             <span className="slack-slash-cmd">/the-office</span>
           </div>
         )}
@@ -259,7 +260,7 @@ const SlackChat: React.FC<SlackChatProps> = ({ messages, muted, volume, onToggle
           <input
             type="text"
             className="slack-input-field"
-            placeholder="Message #office-general"
+            placeholder="Tulis pesan ke #kantor-umum"
             value={inputText}
             onChange={e => {
               const val = e.target.value
@@ -277,7 +278,7 @@ const SlackChat: React.FC<SlackChatProps> = ({ messages, muted, volume, onToggle
                 if (trimmed === '/the-office' || trimmed === '/theoffice') {
                   toggleTheme()
                   const nowOn = getTheme() === 'office'
-                  onSendMessage?.(nowOn ? '🧻 Dunder Mifflin mode: ON. Identity theft is not a joke.' : '🔁 Office theme: OFF')
+                  onSendMessage?.(nowOn ? '🧻 Mode kantor: AKTIF. Selamat datang di Urban Tribble Office.' : '🔁 Tema kantor: NONAKTIF')
                 } else {
                   onSendMessage?.(trimmed)
                 }

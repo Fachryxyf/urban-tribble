@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 # =============================================================================
-# stop-office.sh — Shut down all Agent Office processes
+# stop-office.sh — Matikan semua proses Urban Tribble Office
 #
 # Stops:
-#   1. Chat watcher (bash background process)
+#   1. Watcher folder kerja + watcher chat AI
 #   2. WebSocket/HTTP server (port 3334)
 #   3. Vite dev server (port 3333)
 #
@@ -21,13 +21,16 @@ RESET='\033[0m'
 
 echo ""
 echo -e "${CYAN}╔═══════════════════════════════════════════╗${RESET}"
-echo -e "${CYAN}║    Agent Office — Shutting Down            ║${RESET}"
+echo -e "${CYAN}║    Urban Tribble — Menutup Kantor          ║${RESET}"
 echo -e "${CYAN}╚═══════════════════════════════════════════╝${RESET}"
 echo ""
 
 STOPPED=0
 
-# 1. Chat watcher
+# 1. Folder watcher (file-watcher.py)
+pkill -f "file-watcher.py" 2>/dev/null && { echo -e "${GREEN}[ok]${RESET} Folder watcher stopped"; STOPPED=$((STOPPED + 1)); } || echo -e "${YELLOW}[skip]${RESET} Folder watcher not running"
+
+# 2. Chat watcher
 PID_FILE="$HOME/.agent-office/chat-watcher.pid"
 if [ -f "$PID_FILE" ]; then
     PID=$(cat "$PID_FILE" 2>/dev/null)
@@ -43,7 +46,7 @@ else
     echo -e "${YELLOW}[skip]${RESET} No chat watcher pid file"
 fi
 
-# 2. Server on port 3334
+# 3. Server on port 3334
 SERVER_PIDS=$(lsof -ti :3334 2>/dev/null || true)
 if [ -n "$SERVER_PIDS" ]; then
     echo "$SERVER_PIDS" | xargs kill 2>/dev/null
@@ -53,7 +56,7 @@ else
     echo -e "${YELLOW}[skip]${RESET} Server not running on port 3334"
 fi
 
-# 3. Vite on port 3333
+# 4. Vite on port 3333
 VITE_PIDS=$(lsof -ti :3333 2>/dev/null || true)
 if [ -n "$VITE_PIDS" ]; then
     echo "$VITE_PIDS" | xargs kill 2>/dev/null
@@ -65,8 +68,8 @@ fi
 
 echo ""
 if [ "$STOPPED" -gt 0 ]; then
-    echo -e "${GREEN}Office closed. $STOPPED process(es) stopped.${RESET}"
+    echo -e "${GREEN}Kantor ditutup. $STOPPED proses dihentikan.${RESET}"
 else
-    echo -e "${YELLOW}Nothing was running.${RESET}"
+    echo -e "${YELLOW}Tidak ada yang berjalan.${RESET}"
 fi
 echo ""

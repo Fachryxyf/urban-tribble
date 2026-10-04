@@ -1,10 +1,10 @@
 /**
- * Agent Office - WebSocket + HTTP Event Server
+ * Urban Tribble Office — WebSocket + HTTP Event Server
  *
- * Runs on port 3334.
- * - React frontend connects via ws://localhost:3334/ws
- * - Claude Code hook script POSTs to http://localhost:3334/event
- * - GET /roster returns discovered MCP servers
+ * Berjalan di port 3334.
+ * - Frontend React tersambung via ws://localhost:3334/ws
+ * - File watcher (hooks/file-watcher.py) POST ke http://localhost:3334/event
+ * - GET /roster mengembalikan daftar staf aktif
  */
 
 import express from 'express'
@@ -235,23 +235,27 @@ app.post('/event', (req, res) => {
 
 function handleSlashCommand(cmd) {
   switch (cmd) {
+    case '/laporan':
     case '/status': {
       const agentCount = activeAgents.size
       const working = Array.from(activeAgents.values()).filter(a => a.state === 'working').length
       const clients = wss?.clients?.size ?? 0
-      return `📊 ${agentCount} agents active, ${working} working, ${clients} clients connected`
+      return `📊 ${agentCount} staf aktif, ${working} sedang mengerjakan, ${clients} klien tersambung`
     }
+    case '/tim':
     case '/agents': {
       const agents = Array.from(activeAgents.values())
-      if (agents.length === 0) return '🏢 Office is quiet — no agents active'
+      if (agents.length === 0) return '🏢 kantor lagi sepi — belum ada staf yang bertugas'
       return agents.map(a => `${a.name} (${a.role}) — ${a.state}`).join(', ')
     }
+    case '/hapus':
     case '/clear': {
       db.prepare('DELETE FROM messages').run()
-      return '🧹 Chat cleared'
+      return '🧹 obrolan dibersihkan'
     }
+    case '/bantuan':
     case '/help':
-      return '📋 Commands: /status — office stats, /agents — list agents, /clear — wipe chat history, /help — this message'
+      return '📋 Perintah: /laporan — statistik kantor, /tim — daftar staf, /hapus — hapus riwayat obrolan, /bantuan — pesan ini'
     default:
       return null
   }
@@ -293,8 +297,8 @@ app.post('/chat', (req, res) => {
   // Broadcast to all WS clients
   broadcast({ type: 'chat_message', ...msg })
 
-  // Smart notification — ping when "claude" or "@claude" is mentioned
-  if (/claude/i.test(text)) {
+  // Notifikasi — ping saat "asisten" atau "claude" disebut
+  if (/claude|asisten/i.test(text)) {
     sendNotification('Office Chat', clampString(sender) + ': ' + text.slice(0, 50))
   }
 
@@ -340,8 +344,8 @@ app.get('/chat', (req, res) => {
 })
 
 /**
- * POST /chat/reply — Claude replies as an agent in the office Slack
- * Body: { sender: "AgentName", role: "code-reviewer", text: "message" }
+ * POST /chat/reply — balasan AI masuk sebagai staf di obrolan kantor
+ * Body: { sender: "NamaStaf", role: "keuangan", text: "pesan" }
  */
 app.post('/chat/reply', (req, res) => {
   const { sender, role, text } = req.body ?? {}
@@ -350,7 +354,7 @@ app.post('/chat/reply', (req, res) => {
   }
 
   const msg = addMessage({
-    sender: clampString(sender || 'Claude'),
+    sender: clampString(sender || 'Asisten'),
     role: clampString(role || 'default'),
     text: clampString(text, 2000),
   })
@@ -442,8 +446,8 @@ function processEvent(body) {
       const id = resolveAgentId(agent)
       const record = {
         id,
-        name:   agent.name  ?? 'Agent',
-        role:   agent.role  ?? 'general-purpose',
+        name:   agent.name  ?? 'Staf',
+        role:   agent.role  ?? 'staff',
         task:   agent.task  ?? agent.description ?? '',
         state:  'new-hire',
         spawnedAt: Date.now(),
@@ -454,7 +458,7 @@ function processEvent(body) {
       // Proactive message — announce task in chat
       const taskShort = (record.task ?? '').slice(0, 50)
       if (taskShort) {
-        const chatMsg = addMessage({ sender: record.name, role: record.role, text: `starting: ${taskShort}` })
+        const chatMsg = addMessage({ sender: record.name, role: record.role, text: `mulai: ${taskShort}` })
         broadcast({ type: 'chat_message', ...chatMsg })
       }
 
@@ -483,12 +487,12 @@ function processEvent(body) {
 
         // Proactive message — announce completion in chat
         const resultShort = (body.result ?? 'done').slice(0, 50)
-        const chatMsg = addMessage({ sender: agent.name, role: agent.role, text: `done: ${resultShort}` })
+        const chatMsg = addMessage({ sender: agent.name, role: agent.role, text: `selesai: ${resultShort}` })
         broadcast({ type: 'chat_message', ...chatMsg })
 
-        // Smart notification — alert on failure
-        if (/error|fail/i.test(body.result ?? '')) {
-          sendNotification('Agent Failed', agent.name + ' failed')
+        // Notifikasi — alert kalau ada kegagalan
+        if (/error|fail|gagal/i.test(body.result ?? '')) {
+          sendNotification('Tugas Gagal', agent.name + ' gagal')
         }
       }
       console.log(`[-] Agent completed: ${id}`)
@@ -590,7 +594,7 @@ httpServer.listen(PORT, '127.0.0.1', () => {
   const mcpServers = discoverMcpServers()
   console.log(`
 ╔═══════════════════════════════════════════╗
-║         Agent Office Server v1.0          ║
+║       Urban Tribble Office Server         ║
 ╠═══════════════════════════════════════════╣
 ║  HTTP  http://localhost:${PORT}              ║
 ║  WS    ws://localhost:${PORT}/ws             ║

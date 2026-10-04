@@ -384,10 +384,10 @@ const PlacementHelper: React.FC = () => {
           <span style={{ color: '#555', fontSize: 9 }}>
             {mode === 'waypoint'
               ? selectedWp
-                ? 'Click waypoint to connect • Click empty to place+chain • Shift+drag to move • Right-click to delete • Click selected to deselect'
-                : 'Click empty to place • Click waypoint to select • Right-click to delete'
+                ? 'Klik waypoint untuk menyambung • Klik area kosong untuk letakkan+rangkai • Shift+seret untuk pindah • Klik kanan untuk hapus • Klik yang dipilih untuk batal'
+                : 'Klik area kosong untuk letakkan • Klik waypoint untuk pilih • Klik kanan untuk hapus'
               : canPlace
-                ? `Click to place ${mode}${mode === 'furniture' ? `: ${selectedAsset}` : ''}`
+                ? `Klik untuk letakkan ${mode}${mode === 'furniture' ? `: ${selectedAsset}` : ''}`
                 : 'Select a sprite from palette'
             }
           </span>
@@ -760,7 +760,7 @@ const PlacementHelper: React.FC = () => {
                       zIndex: 200,
                       cursor: 'pointer',
                     }}
-                    title={`${wp.id} (${wp.x}, ${wp.y}) — ${wp.connections.length} connections\nClick: select/connect • Shift+drag: move • Right-click: delete`}
+                    title={`${wp.id} (${wp.x}, ${wp.y}) — ${wp.connections.length} sambungan\nKlik: pilih/sambung • Shift+seret: pindah • Klik kanan: hapus`}
                   >
                     <div style={{
                       width: isSelected ? 28 : 22,
@@ -819,7 +819,7 @@ const PlacementHelper: React.FC = () => {
                     zIndex: Math.round(item.y) + 10,
                     outline: dragging === item.id ? '2px solid #2bac76' : 'none',
                   }}
-                  title={`${item.assetKey} (${item.x}, ${item.y}) — right-click to remove`}
+                  title={`${item.assetKey} (${item.x}, ${item.y}) — klik kanan untuk hapus`}
                 >
                   <img
                     src={asset.path}
@@ -908,8 +908,8 @@ const PlacementHelper: React.FC = () => {
                   zIndex: 100,
                 }}
                 title={item.mode === 'waypoint'
-                  ? `${item.label} (${item.x}, ${item.y}) — click to connect, right-click to remove`
-                  : `${item.mode} (${item.x}, ${item.y})${item.label ? ` — ${item.label}` : ''} — right-click to remove`
+                  ? `${item.label} (${item.x}, ${item.y}) — klik untuk menyambung, klik kanan untuk hapus`
+                  : `${item.mode} (${item.x}, ${item.y})${item.label ? ` — ${item.label}` : ''} — klik kanan untuk hapus`
                 }
               >
                 <div style={{
@@ -959,7 +959,7 @@ const PlacementHelper: React.FC = () => {
             <pre
               style={{ fontSize: 10, color: '#3fb950', margin: 0, cursor: 'pointer' }}
               onClick={() => navigator.clipboard.writeText(generateJson())}
-              title="Click to copy"
+              title="Klik untuk salin"
             >
               {generateJson() || '// Nothing placed yet'}
             </pre>

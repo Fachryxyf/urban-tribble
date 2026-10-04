@@ -88,8 +88,8 @@ function computePath(
   return path
 }
 
-// Roles that go to the filing cabinet instead of their desk (browsing codebase)
-const FILING_ROLES = new Set(['Explore', 'general-purpose'])
+// Role yang menuju lemari arsip, bukan meja (menelusuri dokumen)
+const FILING_ROLES = new Set(['staff'])
 
 // The boss — always in the office, permanent desk (spot-1)
 const BOSS_ID = `boss-${BOSS_NAME.toLowerCase()}`
@@ -113,8 +113,8 @@ function createBoss(): Agent {
     assignedRoom: 'main-office',
     assignedSpotId: spot.id,
     spriteFacing: spot.spriteFacing,
-    task: 'Running the show',
-    statusText: 'clocked in',
+    task: 'Memimpin kantor',
+    statusText: 'masuk kantor',
     color: cfg.color,
     emoji: cfg.emoji,
     hiredAt: Date.now(),
@@ -145,8 +145,8 @@ function createClaude(): Agent {
     assignedRoom: 'main-office',
     assignedSpotId: spot.id,
     spriteFacing: spot.spriteFacing,
-    task: 'Office assistant',
-    statusText: 'clocked in',
+    task: 'Asisten kantor',
+    statusText: 'masuk kantor',
     color: cfg.color,
     emoji: cfg.emoji,
     hiredAt: Date.now() + 500, // arrives just after the boss
@@ -197,87 +197,81 @@ interface PendingEffect {
 // ---------------------------------------------------------------------------
 const SIM_SCENARIOS = [
   {
-    role: 'security-auditor',
-    task: 'Auditing auth middleware for session token vulnerabilities',
+    role: 'keuangan',
+    task: 'Rekap invoice & pengeluaran bulan Maret',
     slackMessages: [
-      '🔍 scanning auth middleware...',
-      '⚠️ found session tokens stored in localStorage — flagging',
-      '🔐 checking CORS configuration on API endpoints',
-      '📋 reviewing JWT expiry and refresh flow',
-      '✅ auth audit complete — 2 issues found, PRs drafted',
+      '💰 buka spreadsheet pengeluaran Maret',
+      '⚠️ 3 invoice belum ada nomor seri — ditandai',
+      '📊 nyocokin kas dengan rekening koran',
+      '✅ rekap beres — tinggal ditandatangani',
     ],
   },
   {
-    role: 'frontend-developer',
-    task: 'Building responsive dashboard with real-time charts',
+    role: 'hrd',
+    task: 'Rekap absensi & jadwal shift minggu ini',
     slackMessages: [
-      '🎨 scaffolding dashboard layout with grid system',
-      '📊 integrating chart library — testing with live data',
-      '💅 adding dark mode support to all components',
-      '🧪 writing component tests for chart rendering',
-      '🚀 dashboard ready for review',
+      '👥 tarik data absen dari mesin fingerprint',
+      '📋 2 izin sakit masuk, dicatat',
+      '🔍 cek jadwal shift biar gak bentrok',
+      '✅ absensi beres — laporan siap ke atasan',
     ],
   },
   {
-    role: 'code-reviewer',
-    task: 'Reviewing PR #487 — payment processing refactor',
+    role: 'admin',
+    task: 'Arsip surat masuk & siapkan surat keluar',
     slackMessages: [
-      '👀 opening PR #487 — 23 files changed',
-      '🔍 checking error handling in payment flow',
-      '💡 suggesting async/await instead of .then chains',
-      '⚡ found a potential race condition in webhook handler',
-      '✅ review complete — approved with 3 suggestions',
+      '📁 sortir surat masuk pagi ini',
+      '🖨️ cetak 5 surat keluar buat tanda tangan',
+      '📄 scanning dokumen vendor ke folder bersama',
+      '✅ arsip beres, meja rapi',
     ],
   },
 ]
 
 // Extra random slack chatter between agents
 const SIM_CHATTER = [
-  { sender: 'Debugger', role: 'debugger', msg: 'found a null pointer in the auth handler, patching now' },
-  { sender: 'Frontend', role: 'frontend-developer', msg: 'the new dark mode toggle is looking clean' },
-  { sender: 'Security', role: 'security-auditor', msg: 'heads up — that API key should be in env vars, not hardcoded' },
-  { sender: 'Reviewer', role: 'code-reviewer', msg: 'lgtm on the PR, just one nit on the error handling' },
-  { sender: 'DBA', role: 'database-architect', msg: 'added an index on user_id, queries are 10x faster now' },
-  { sender: 'DevOps', role: 'devops-engineer', msg: 'staging deploy is green, promoting to prod' },
-  { sender: 'Claude', role: 'assistant', msg: 'the printer jammed again. third time today.' },
-  { sender: 'Tester', role: 'test-engineer', msg: 'coverage is at 94%, just need the edge cases' },
-  { sender: 'PerfEng', role: 'performance-engineer', msg: 'shaved 200ms off the initial load, LCP is under 2s' },
-  { sender: 'Frontend', role: 'frontend-developer', msg: 'responsive layout done, looks great on mobile' },
-  { sender: 'Claude', role: 'assistant', msg: 'someone get the coffee machine, its making that sound again' },
-  { sender: 'Architect', role: 'architect-reviewer', msg: 'the new module boundary looks solid, good separation' },
-  { sender: 'AI Eng', role: 'ai-engineer', msg: 'embeddings are indexed, RAG pipeline is live' },
-  { sender: 'TS Pro', role: 'typescript-pro', msg: 'fixed the generic inference, no more any casts' },
-  { sender: 'Antony', role: 'boss', msg: 'anyone want a Red Bull?' },
-  { sender: 'Antony', role: 'boss', msg: 'ship it, we\'ll fix it in prod' },
-  { sender: 'Antony', role: 'boss', msg: 'how are we looking on the dashboard?' },
+  { sender: 'Keuangan', role: 'keuangan', msg: 'invoice Maret udah gw rekap, tinggal approve' },
+  { sender: 'HRD', role: 'hrd', msg: 'absensi pagi lengkap, cuma 2 yang telat' },
+  { sender: 'Admin', role: 'admin', msg: 'surat dari vendor kemarin belum dibalas nih' },
+  { sender: 'Sekretaris', role: 'sekretaris', msg: 'rapat jam 3 di ruang tengah, undangan udah dikirim' },
+  { sender: 'Logistik', role: 'logistik', msg: 'barang dateng, lagi dicek satu-satu' },
+  { sender: 'Pemasaran', role: 'pemasaran', msg: 'draft caption promo akhir bulan, tolong dicek ya' },
+  { sender: 'Asisten', role: 'assistant', msg: 'printer macet lagi. ketiga kalinya hari ini.' },
+  { sender: 'Asisten', role: 'assistant', msg: 'kopi di break room habis. ini darurat.' },
+  { sender: 'Staff', role: 'staff', msg: 'lagi arsip dokumen lama di lemari belakang' },
+  { sender: 'Keuangan', role: 'keuangan', msg: 'sisa budget ATK tinggal 15%, hati-hati ya' },
+  { sender: 'HRD', role: 'hrd', msg: 'jam istirahat hampir habis, Stanley udah berdiri di depan pintu' },
+  { sender: BOSS_NAME, role: 'boss', msg: 'mau kopi gak?' },
+  { sender: BOSS_NAME, role: 'boss', msg: 'angka bulan ini gimana?' },
+  { sender: BOSS_NAME, role: 'boss', msg: 'rapat jam 3 jangan telat ya' },
 ]
 
-// Dunder Mifflin themed chatter — used when /the-office is active
+// Obrolan gaya Dunder Mifflin — dipakai saat /the-office aktif
 const OFFICE_SIM_CHATTER = [
-  { sender: 'Debugger', role: 'debugger', msg: 'found a bug in the system — Creed. again.' },
-  { sender: 'Frontend', role: 'frontend-developer', msg: 'new catalog brochure looks cleaner than Dwight\'s desk' },
-  { sender: 'Security', role: 'security-auditor', msg: 'heads up — Dwight is conducting another surprise fire drill' },
-  { sender: 'Reviewer', role: 'code-reviewer', msg: 'the ream count checks out. approved.' },
-  { sender: 'DBA', role: 'database-architect', msg: 'indexed the client list alphabetically. like the old days.' },
-  { sender: 'DevOps', role: 'devops-engineer', msg: 'loading the delivery truck — Schrute beet vans.' },
-  { sender: 'Claude', role: 'assistant', msg: 'Michael is in the conference room. again. please help.' },
-  { sender: 'Tester', role: 'test-engineer', msg: 'tested the paper quality. still paper. 94% paper.' },
-  { sender: 'PerfEng', role: 'performance-engineer', msg: 'the printer warms up 200ms faster. small wins.' },
-  { sender: 'Frontend', role: 'frontend-developer', msg: 'mobile layout works — even Creed noticed' },
-  { sender: 'Claude', role: 'assistant', msg: 'someone get the printer, it\'s on fire. literal fire.' },
-  { sender: 'Architect', role: 'architect-reviewer', msg: 'the Finer Things Club charter is immaculate' },
-  { sender: 'AI Eng', role: 'ai-engineer', msg: 'teaching the copier to recognize Stanley\'s handwriting' },
-  { sender: 'TS Pro', role: 'typescript-pro', msg: 'false. that is not a staple. it is a Dwight.' },
-  { sender: 'Antony', role: 'boss', msg: "anyone want to go to Chili's? I got Baby Back Ribs on the brain." },
-  { sender: 'Antony', role: 'boss', msg: 'ship it. we\'ll fix it in prod. PARKOUR!' },
-  { sender: 'Antony', role: 'boss', msg: 'how many reams did we move today?' },
-  { sender: 'Antony', role: 'boss', msg: "I'm not superstitious, but I am a little stitious." },
-  { sender: 'Debugger', role: 'debugger', msg: 'Bears. Beets. Battlestar Galactica.' },
-  { sender: 'Security', role: 'security-auditor', msg: 'Identity theft is not a joke, Jim! Millions of families suffer every year!' },
-  { sender: 'Reviewer', role: 'code-reviewer', msg: "that's what she said" },
-  { sender: 'Frontend', role: 'frontend-developer', msg: 'I feel God in this Chili\'s tonight' },
-  { sender: 'Tester', role: 'test-engineer', msg: 'Would I rather be feared or loved? Easy. Both.' },
-  { sender: 'DevOps', role: 'devops-engineer', msg: 'I declare BANKRUPTCY' },
+  { sender: 'Admin', role: 'admin', msg: 'nemu masalah lagi di arsip — Creed. lagi.' },
+  { sender: 'Sekretaris', role: 'sekretaris', msg: 'katalog baru lebih rapi dari meja Dwight' },
+  { sender: 'HRD', role: 'hrd', msg: 'awas — Dwight bikin simulasi kebakaran dadakan lagi' },
+  { sender: 'Keuangan', role: 'keuangan', msg: 'jumlah rim kertas cocok. approved.' },
+  { sender: 'Staff', role: 'staff', msg: 'daftar klien diurutkan alfabetis. seperti dulu kala.' },
+  { sender: 'Logistik', role: 'logistik', msg: 'muat truk pengiriman — mobil bit Schrute.' },
+  { sender: 'Asisten', role: 'assistant', msg: 'Michael di ruang rapat. lagi. tolong.' },
+  { sender: 'HRD', role: 'hrd', msg: 'kualitas kertas diuji. tetap kertas. 94% kertas.' },
+  { sender: 'Keuangan', role: 'keuangan', msg: 'printer panas 200ms lebih cepat. kemenangan kecil.' },
+  { sender: 'Pemasaran', role: 'pemasaran', msg: 'materi promo di HP udah oke — sampai Creed sadar' },
+  { sender: 'Asisten', role: 'assistant', msg: 'ambil printer, dia kebakar. kebakar beneran.' },
+  { sender: 'Sekretaris', role: 'sekretaris', msg: 'piagam Finer Things Club mulus sempurna' },
+  { sender: 'Pemasaran', role: 'pemasaran', msg: 'ngajarin mesin fotokopi baca tulisan tangan Stanley' },
+  { sender: 'Staff', role: 'staff', msg: 'false. itu bukan staples. itu Dwight.' },
+  { sender: BOSS_NAME, role: 'boss', msg: "ke Chili's gak? pengen Baby Back Ribs." },
+  { sender: BOSS_NAME, role: 'boss', msg: 'beresin. rapat besok. PARKOUR!' },
+  { sender: BOSS_NAME, role: 'boss', msg: 'berapa rim yang kita geser hari ini?' },
+  { sender: BOSS_NAME, role: 'boss', msg: "I'm not superstitious, but I am a little stitious." },
+  { sender: 'Logistik', role: 'logistik', msg: 'Bears. Beets. Battlestar Galactica.' },
+  { sender: 'HRD', role: 'hrd', msg: 'Identity theft is not a joke, Jim! Millions of families suffer every year!' },
+  { sender: 'Keuangan', role: 'keuangan', msg: "that's what she said" },
+  { sender: 'Pemasaran', role: 'pemasaran', msg: "I feel God in this Chili's tonight" },
+  { sender: 'Sekretaris', role: 'sekretaris', msg: 'Would I rather be feared or loved? Easy. Both.' },
+  { sender: 'Admin', role: 'admin', msg: 'I declare BANKRUPTCY' },
 ]
 
 const App: React.FC = () => {
@@ -501,10 +495,10 @@ const App: React.FC = () => {
     if (arrivedRef.current) return
     arrivedRef.current = true
     const bossCfg = AGENT_CONFIGS[BOSS_ROLE] ?? AGENT_CONFIGS['default']
-    addMsg(bossCfg.title, BOSS_ROLE, bossCfg.color, '👑 clocked in')
+    addMsg(bossCfg.title, BOSS_ROLE, bossCfg.color, '👑 masuk kantor')
     const claudeCfg = AGENT_CONFIGS[CLAUDE_ROLE] ?? AGENT_CONFIGS['default']
     setTimeout(() => {
-      addMsg(claudeCfg.title, CLAUDE_ROLE, claudeCfg.color, '🤖 clocked in')
+      addMsg(claudeCfg.title, CLAUDE_ROLE, claudeCfg.color, '🤖 masuk kantor')
     }, 1500)
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -575,7 +569,7 @@ const App: React.FC = () => {
           const raw = event.agent ?? {}
           const id   = raw.id   ?? `agent-${Date.now()}`
           const name = raw.name ?? 'Agent'
-          const role = raw.role ?? 'general-purpose'
+          const role = raw.role ?? 'staff'
           const task = raw.task
 
           // Already tracked? Skip.
@@ -683,16 +677,16 @@ const App: React.FC = () => {
             // Boss replies to completed tasks
             const bossCfg = AGENT_CONFIGS[BOSS_ROLE] ?? AGENT_CONFIGS['default']
             const bossReplies = [
-              `nice work ${a.name} 👊`,
-              `solid 🔥`,
-              `ship it!`,
-              `great stuff, grab a Red Bull`,
-              `legend 💯`,
-              `good job, who\'s next?`,
-              `that was quick, another one?`,
-              `clean work 👌`,
-              `cheers ${a.name}`,
-              `merged. next task loading...`,
+              `keren ${a.name} 👊`,
+              `mantap 🔥`,
+              `gas lanjut!`,
+              `bagus, ngopi dulu sana`,
+              `top 💯`,
+              `bagus, siapa berikutnya?`,
+              `cepat juga ya`,
+              `rapi 👌`,
+              `thanks ${a.name}`,
+              `oke. tugas berikutnya...`,
             ]
             // Why: when Office theme is on, Michael Scott occasionally lands his signature line.
             const isMichael = getTheme() === 'office'
@@ -805,8 +799,8 @@ const App: React.FC = () => {
           const role = (event as any).role as string | undefined
           let msgSender: string, msgRole: string, msgColor: string
 
-          // If sender is "Claude" (from AI watcher/bridge), always attribute to Claude
-          if (sender.toLowerCase() === 'claude') {
+          // Kalau pengirim balasan AI (dari watcher), selalu atribusikan ke Asisten
+          if (['claude', 'asisten'].includes(sender.toLowerCase())) {
             const claudeCfg = AGENT_CONFIGS[CLAUDE_ROLE] ?? AGENT_CONFIGS['default']
             msgSender = claudeCfg.title; msgRole = CLAUDE_ROLE; msgColor = claudeCfg.color
           } else if (role && AGENT_CONFIGS[role]) {
@@ -858,9 +852,7 @@ const App: React.FC = () => {
       // Why: roles are synthetic "dm-0..dm-9" so each slot gets its own cast entry
       const STAFF_COUNT = 10
       const ROTATION_MS = 9000 // Why: fast enough to see all 22 in <2 min
-      const ROLES = ['debugger', 'code-reviewer', 'frontend-developer', 'fullstack-developer',
-                      'test-engineer', 'security-auditor', 'devops-engineer',
-                      'architect-reviewer', 'performance-engineer', 'ai-engineer'] as const
+      const ROLES = ['keuangan', 'hrd', 'admin', 'sekretaris', 'logistik', 'pemasaran'] as const
       let lastRetired: string | null = null
 
       const spawnSlot = (slotIdx: number, initialDelay = 0) => {
@@ -883,7 +875,7 @@ const App: React.FC = () => {
             },
           })
           timers.push(setTimeout(() => {
-            addMsg(displayName, role, cfg.color, `clocked in — ${displayName} reporting`)
+            addMsg(displayName, role, cfg.color, `masuk kantor — ${displayName} lapor`)
           }, 1000))
         }, initialDelay))
       }
@@ -928,7 +920,7 @@ const App: React.FC = () => {
           if (staff.length === 0) return prev
           const speaker = staff[Math.floor(Math.random() * staff.length)]
           const lines = OFFICE_SIM_TOOL_MESSAGES[ROLES[parseInt(speaker.role.split('-')[2], 10) % ROLES.length]] ?? []
-          const line = lines[Math.floor(Math.random() * lines.length)] ?? 'selling paper'
+          const line = lines[Math.floor(Math.random() * lines.length)] ?? 'jual kertas'
           const cfg = AGENT_CONFIGS[ROLES[0]] ?? AGENT_CONFIGS['default']
           addMsg(speaker.name, speaker.role, cfg.color, line)
           return prev
@@ -997,7 +989,7 @@ const App: React.FC = () => {
         })
         // Proactive "starting:" message a moment after spawn
         timers.push(setTimeout(() => {
-          addMsg(cfg.title, sim.role, cfg.color, `starting: ${sim.task}`)
+          addMsg(cfg.title, sim.role, cfg.color, `mulai: ${sim.task}`)
         }, 1200))
       }, spawnAt))
     })
@@ -1029,12 +1021,12 @@ const App: React.FC = () => {
           reactToLastMsg(3000)
 
           // Trigger ultra-think powerup on specific messages
-          if (sim.slackMessages[msgIdx].includes('race condition') ||
-              sim.slackMessages[msgIdx].includes('scanning') ||
-              sim.slackMessages[msgIdx].includes('architecture')) {
+          if (sim.slackMessages[msgIdx].includes('invoice') ||
+              sim.slackMessages[msgIdx].includes('absen') ||
+              sim.slackMessages[msgIdx].includes('arsip')) {
             setAgents(prev => prev.map(a =>
               a.role === sim.role
-                ? { ...a, statusText: 'ultra-think: deep analysis...' }
+                ? { ...a, statusText: 'fokus: analisis detail...' }
                 : a
             ))
             // Clear ultra-think after a few seconds
@@ -1074,59 +1066,59 @@ const App: React.FC = () => {
       intervals.push(chatterInterval)
     }, 18000))
 
-    // Phase 4: Spawn an Explore agent partway through (codebase search)
+    // Phase 4: Staff arsip masuk di tengah jalan (menelusuri dokumen lama)
     timers.push(setTimeout(() => {
-      const exploreCfg = AGENT_CONFIGS['Explore'] ?? AGENT_CONFIGS['default']
+      const staffCfg = AGENT_CONFIGS['staff'] ?? AGENT_CONFIGS['default']
       handleEvent({
         type: 'agent_spawned',
         agent: {
-          id: 'sim-explore',
-          name: exploreCfg.title,
-          role: 'Explore',
-          task: 'Searching codebase for API endpoint patterns',
+          id: 'sim-staff',
+          name: staffCfg.title,
+          role: 'staff',
+          task: 'Menelusuri arsip dokumen lama',
         },
       })
       timers.push(setTimeout(() => {
-        addMsg(exploreCfg.title, 'Explore', exploreCfg.color, 'starting: Searching codebase for API endpoint patterns')
+        addMsg(staffCfg.title, 'staff', staffCfg.color, 'mulai: Menelusuri arsip dokumen lama')
       }, 1200))
-      // Explorer completes and leaves after 20s
+      // Staff selesai & keluar setelah 20 detik
       timers.push(setTimeout(() => {
         handleEvent({
           type: 'agent_completed',
-          agentId: 'sim-explore',
-          result: 'Found 12 API endpoints across 4 route files',
+          agentId: 'sim-staff',
+          result: '12 dokumen terarsip di 4 folder',
         })
         timers.push(setTimeout(() => {
-          addMsg(exploreCfg.title, 'Explore', exploreCfg.color, 'done: Found 12 API endpoints across 4 route files')
+          addMsg(staffCfg.title, 'staff', staffCfg.color, 'selesai: 12 dokumen terarsip di 4 folder')
         }, 800))
       }, 20000))
     }, 25000))
 
-    // Phase 5: One agent completes task, walks to door, leaves — then a new one spawns
+    // Phase 5: Satu staf selesai tugas, jalan ke pintu, keluar — lalu pengganti masuk
     timers.push(setTimeout(() => {
       handleEvent({
         type: 'agent_completed',
-        agentId: 'sim-code-reviewer',
-        result: 'PR #487 approved — ready to merge',
+        agentId: 'sim-admin',
+        result: 'Surat keluar siap dikirim — tinggal tanda tangan',
       })
       timers.push(setTimeout(() => {
-        const reviewCfg = AGENT_CONFIGS['code-reviewer'] ?? AGENT_CONFIGS['default']
-        addMsg(reviewCfg.title, 'code-reviewer', reviewCfg.color, 'done: PR #487 approved — ready to merge')
+        const adminCfg = AGENT_CONFIGS['admin'] ?? AGENT_CONFIGS['default']
+        addMsg(adminCfg.title, 'admin', adminCfg.color, 'selesai: Surat keluar siap dikirim — tinggal tanda tangan')
       }, 800))
-      // Replacement agent arrives
+      // Staf pengganti datang
       timers.push(setTimeout(() => {
-        const cfg = AGENT_CONFIGS['debugger'] ?? AGENT_CONFIGS['default']
+        const cfg = AGENT_CONFIGS['logistik'] ?? AGENT_CONFIGS['default']
         handleEvent({
           type: 'agent_spawned',
           agent: {
-            id: 'sim-debugger',
+            id: 'sim-logistik',
             name: cfg.title,
-            role: 'debugger',
-            task: 'Investigating null pointer in payment webhook handler',
+            role: 'logistik',
+            task: 'Cek stok gudang & terima kiriman masuk',
           },
         })
         timers.push(setTimeout(() => {
-          addMsg(cfg.title, 'debugger', cfg.color, 'starting: Investigating null pointer in payment webhook handler')
+          addMsg(cfg.title, 'logistik', cfg.color, 'mulai: Cek stok gudang & terima kiriman masuk')
         }, 1200))
       }, 8000))
     }, 50000))
@@ -1152,22 +1144,22 @@ const App: React.FC = () => {
     // 0-3s: Office is just Antony, settling in
     timers.push(setTimeout(() => {
       addMsg(bossCfg.title, BOSS_ROLE, bossCfg.color,
-        officeSim0 ? "👑 World's Best Boss clocked in, let's sell some paper" : '👑 clocked in, lets get to work')
+        officeSim0 ? "👑 World's Best Boss clocked in, let's sell some paper" : '👑 masuk kantor, semangat!')
     }, 2000))
 
     // 4s: Antony types a question in Slack
     timers.push(setTimeout(() => {
       setAutoTypeText(officeSim0
-        ? (OFFICE_SIM_BOSS_PROMPTS[0] ?? '/ultra-think audit our authentication system for security vulnerabilities')
-        : '/ultra-think audit our authentication system for security vulnerabilities')
+        ? (OFFICE_SIM_BOSS_PROMPTS[0] ?? '/rekap laporan keuangan minggu ini')
+        : '/rekap laporan keuangan minggu ini')
     }, 4000))
 
     // 8s: 3 agents spawn with ultra-think tasks (energy drinks!)
     timers.push(setTimeout(() => {
       const spawns = [
-        { id: 'vid-security', role: 'security-auditor', name: 'Security', task: 'ultra-think: deep analysis of auth middleware vulnerabilities' },
-        { id: 'vid-reviewer', role: 'code-reviewer', name: 'Reviewer', task: 'ultra-think: reviewing authentication token handling' },
-        { id: 'vid-frontend', role: 'frontend-developer', name: 'Frontend', task: 'ultra-think: auditing client-side auth state management' },
+        { id: 'vid-keuangan', role: 'keuangan', name: 'Keuangan', task: 'fokus: analisis laporan keuangan kuartal' },
+        { id: 'vid-hrd', role: 'hrd', name: 'HRD', task: 'fokus: cek absensi & jadwal shift' },
+        { id: 'vid-admin', role: 'admin', name: 'Admin', task: 'fokus: arsip surat & dokumen vendor' },
       ]
       spawns.forEach((s, i) => {
         timers.push(setTimeout(() => {
@@ -1180,14 +1172,14 @@ const App: React.FC = () => {
     // Why: swap to Office-themed chatter when /the-office mode is on at sim start
     const isOfficeSim = getTheme() === 'office'
     const defaultToolMessages = [
-      { t: 16000, sender: 'Security', role: 'security-auditor', text: '⚡ reading src/auth/middleware.ts' },
-      { t: 18000, sender: 'Reviewer', role: 'code-reviewer', text: '⚡ running: grep -r "jwt" src/' },
-      { t: 20000, sender: 'Security', role: 'security-auditor', text: '⚠️ session tokens stored in localStorage — XSS risk' },
-      { t: 22000, sender: 'Frontend', role: 'frontend-developer', text: '⚡ reading src/hooks/useAuth.ts' },
-      { t: 24000, sender: 'Reviewer', role: 'code-reviewer', text: '🔍 checking CORS config on /api/auth endpoints' },
-      { t: 26000, sender: 'Security', role: 'security-auditor', text: '🚨 JWT refresh token has no expiry set' },
-      { t: 28000, sender: 'Frontend', role: 'frontend-developer', text: '⚡ editing src/auth/tokenStore.ts' },
-      { t: 30000, sender: 'Reviewer', role: 'code-reviewer', text: '💡 suggesting httpOnly cookies instead of localStorage' },
+      { t: 16000, sender: 'Keuangan', role: 'keuangan', text: '⚡ buka laporan kas Maret' },
+      { t: 18000, sender: 'HRD', role: 'hrd', text: '⚡ tarik data absen hari ini' },
+      { t: 20000, sender: 'Keuangan', role: 'keuangan', text: '⚠️ ada 3 invoice lewat tempo — ditagih hari ini' },
+      { t: 22000, sender: 'Admin', role: 'admin', text: '⚡ scan surat masuk pagi ini' },
+      { t: 24000, sender: 'HRD', role: 'hrd', text: '🔍 jadwal shift Jumat bentrok' },
+      { t: 26000, sender: 'Keuangan', role: 'keuangan', text: '🚨 budget ATK tinggal 15%' },
+      { t: 28000, sender: 'Admin', role: 'admin', text: '⚡ upload dokumen vendor ke folder bersama' },
+      { t: 30000, sender: 'HRD', role: 'hrd', text: '💡 usul: jadwal kerja fleksibel hari Jumat' },
     ]
     const toolMessages = isOfficeSim
       ? defaultToolMessages.map((m, i) => {
@@ -1204,50 +1196,50 @@ const App: React.FC = () => {
 
     // 25s: Antony types a follow-up
     timers.push(setTimeout(() => {
-      setAutoTypeText(isOfficeSim ? (OFFICE_SIM_BOSS_PROMPTS[1] ?? 'how bad is the localStorage issue?') : 'how bad is the localStorage issue?')
+      setAutoTypeText(isOfficeSim ? (OFFICE_SIM_BOSS_PROMPTS[1] ?? 'gimana angka penjualan kita?') : 'gimana angka penjualan kita?')
     }, 25000))
 
     // 27s: Agent replies
     timers.push(setTimeout(() => {
-      const cfg = AGENT_CONFIGS['security-auditor'] ?? AGENT_CONFIGS['default']
-      addMsg('Security', 'security-auditor', cfg.color,
+      const cfg = AGENT_CONFIGS['keuangan'] ?? AGENT_CONFIGS['default']
+      addMsg('Keuangan', 'keuangan', cfg.color,
         isOfficeSim
-          ? 'critical — Dwight-level bad. any XSS gives full account takeover. moving to httpOnly cookies now'
-          : 'critical — any XSS gives full account takeover. moving to httpOnly cookies now')
+          ? 'kritis — level parah ala Dwight. semua angka saya audit ulang sekarang'
+          : 'kritis — 3 invoice lewat tempo. lagi saya kejar sekarang')
     }, 27500))
 
     // 30s: Random chatter
     timers.push(setTimeout(() => {
-      const cfg = AGENT_CONFIGS['frontend-developer'] ?? AGENT_CONFIGS['default']
-      addMsg('Frontend', 'frontend-developer', cfg.color,
-        isOfficeSim ? 'I can handle the cookie migration — easier than organizing the Dundies' : 'I can handle the cookie migration on the client side')
+      const cfg = AGENT_CONFIGS['admin'] ?? AGENT_CONFIGS['default']
+      addMsg('Admin', 'admin', cfg.color,
+        isOfficeSim ? 'beresin arsip? gampang — lebih gampang dari ngatur Dundies' : 'dokumen tinggal aku pindahin ke folder bersama')
     }, 30000))
 
     timers.push(setTimeout(() => {
-      const cfg = AGENT_CONFIGS['code-reviewer'] ?? AGENT_CONFIGS['default']
-      addMsg('Reviewer', 'code-reviewer', cfg.color,
-        isOfficeSim ? 'lgtm. ship it to Stamford, boom. roasted.' : 'lgtm on the approach, lets ship it')
+      const cfg = AGENT_CONFIGS['hrd'] ?? AGENT_CONFIGS['default']
+      addMsg('HRD', 'hrd', cfg.color,
+        isOfficeSim ? 'approved. cabang Stamford, gas. boom. roasted.' : 'absensi tervalidasi, lanjut berikutnya')
     }, 32000))
 
     // 33s: Antony checks status with a slash command
     timers.push(setTimeout(() => {
-      setAutoTypeText('/status')
+      setAutoTypeText('/laporan')
     }, 33000))
 
-    // 35s: Explorer spawns to check codebase
+    // 35s: Staff arsip masuk menelusuri dokumen
     timers.push(setTimeout(() => {
       handleEvent({
         type: 'agent_spawned',
-        agent: { id: 'vid-explore', name: 'Explorer', role: 'Explore', task: 'Scanning auth-related files across codebase' },
+        agent: { id: 'vid-staff', name: 'Staff', role: 'staff', task: 'Menelusuri arsip dokumen terkait' },
       })
     }, 35000))
 
     // 38s: Pizza delivery event!
     timers.push(setTimeout(() => {
       addMsg('system', 'default', '#8b8d91',
-        officeSim0 ? '🥨 IT\'S PRETZEL DAY' : '🍕 Pizza has arrived! Free lunch!', true)
+        officeSim0 ? '🥨 IT\'S PRETZEL DAY' : '🍕 Pizza sampai! Makan siang gratis!', true)
       addMsg(bossCfg.title, BOSS_ROLE, bossCfg.color,
-        officeSim0 ? "You don't understand. It's pretzel day." : 'Pizza in the lobby!')
+        officeSim0 ? "You don't understand. It's pretzel day." : 'Pizza di lobi!')
       // Move all agents to door
       setAgents(prev => prev.map(a => ({
         ...a,
@@ -1270,14 +1262,14 @@ const App: React.FC = () => {
 
     // 45s: Agent chatter after pizza/pretzels
     timers.push(setTimeout(() => {
-      const cfg = AGENT_CONFIGS['security-auditor'] ?? AGENT_CONFIGS['default']
-      addMsg('Security', 'security-auditor', cfg.color,
-        officeSim0 ? 'all the toppings. Stanley has been waiting all year.' : 'pineapple on pizza is a security vulnerability')
+      const cfg = AGENT_CONFIGS['keuangan'] ?? AGENT_CONFIGS['default']
+      addMsg('Keuangan', 'keuangan', cfg.color,
+        officeSim0 ? 'all the toppings. Stanley has been waiting all year.' : 'nanas di pizza itu masalah serius')
     }, 46000))
 
     timers.push(setTimeout(() => {
-      const cfg = AGENT_CONFIGS['frontend-developer'] ?? AGENT_CONFIGS['default']
-      addMsg('Frontend', 'frontend-developer', cfg.color,
+      const cfg = AGENT_CONFIGS['admin'] ?? AGENT_CONFIGS['default']
+      addMsg('Admin', 'admin', cfg.color,
         officeSim0 ? "that's what she said" : '😂')
     }, 47500))
 
@@ -1285,10 +1277,10 @@ const App: React.FC = () => {
     timers.push(setTimeout(() => {
       handleEvent({
         type: 'agent_completed',
-        agentId: 'vid-security',
+        agentId: 'vid-keuangan',
         result: officeSim0
-          ? 'Audit complete — beets secured. 3 critical issues booked into the Schrute Manual.'
-          : 'Auth audit complete — 3 critical issues fixed, 2 PRs merged',
+          ? 'Audit beres — bit aman. 3 masalah kritis dicatat di Schrute Manual.'
+          : 'Audit beres — 3 masalah kritis diperbaiki, 2 laporan dikirim',
       })
     }, 48000))
 
@@ -1296,25 +1288,25 @@ const App: React.FC = () => {
     timers.push(setTimeout(() => {
       handleEvent({
         type: 'agent_completed',
-        agentId: 'vid-explore',
-        result: officeSim0 ? 'Found 8 auth files — all filed under B for "Beet".' : 'Found 8 auth-related files, all updated',
+        agentId: 'vid-staff',
+        result: officeSim0 ? '8 dokumen ditemukan — semua diarsipkan di folder B untuk "Beet".' : '8 dokumen ditemukan, semua sudah diarsipkan',
       })
     }, 52000))
 
     // 55s: Antony wraps up
     timers.push(setTimeout(() => {
-      setAutoTypeText(officeSim0 ? 'great work team — boom. roasted. 🥨' : 'great work team, ship it! 🚀')
+      setAutoTypeText(officeSim0 ? 'great work team — boom. roasted. 🥨' : 'kerja bagus tim! 🚀')
     }, 55000))
 
     // 58s: Remaining agents complete
     timers.push(setTimeout(() => {
-      handleEvent({ type: 'agent_completed', agentId: 'vid-reviewer',
-        result: officeSim0 ? 'All PRs reviewed — Jim-approved.' : 'All PRs reviewed and approved' })
+      handleEvent({ type: 'agent_completed', agentId: 'vid-hrd',
+        result: officeSim0 ? 'Semua absensi tervalidasi — approve-nya Jim.' : 'Semua absensi tervalidasi dan disetujui' })
     }, 58000))
 
     timers.push(setTimeout(() => {
-      handleEvent({ type: 'agent_completed', agentId: 'vid-frontend',
-        result: officeSim0 ? 'Cookies deployed — Kevin took half for his chili.' : 'Cookie migration deployed to staging' })
+      handleEvent({ type: 'agent_completed', agentId: 'vid-admin',
+        result: officeSim0 ? 'Dokumen diunggah — Kevin ambil setengah buat chili-nya.' : 'Dokumen terunggah ke folder bersama' })
     }, 60000))
 
     return () => timers.forEach(t => clearTimeout(t))

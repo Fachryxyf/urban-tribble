@@ -1,15 +1,17 @@
 {
-  "name": "agent-office",
+  "name": "urban-tribble",
   "version": "1.0.0",
-  "description": "Pixel art office visualization for AI agents powered by Claude Code hooks",
-  "author": "W17ANT",
+  "description": "Virtual Office Staf AI Kantor — pixel office untuk kantor biasa, didukung folder kerja lokal",
+  "author": "Fachryxyf",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/W17ANT/agent-office.git"
+    "url": "https://github.com/Fachryxyf/urban-tribble.git"
   },
-  "homepage": "https://github.com/W17ANT/agent-office",
-  "bugs": "https://github.com/W17ANT/agent-office/issues",
+  "homepage": "https://github.com/Fachryxyf/urban-tribble",
+  "bugs": {
+    "url": "https://github.com/Fachryxyf/urban-tribble/issues"
+  },
   "type": "module",
   "main": "electron/main.cjs",
   "scripts": {
@@ -20,9 +22,11 @@
     "build:electron": "vite build && electron-builder",
     "pack": "vite build && electron-builder --dir",
     "electron": "electron .",
-    "start": "npm run dev:electron",
+    "start": "bash scripts/start-office.sh",
     "server": "node server/index.js",
-    "install-hooks": "bash hooks/install-hooks.sh"
+    "install-hooks": "bash hooks/install-hooks.sh",
+    "file-watcher": "python3 hooks/file-watcher.py --loop",
+    "stop": "bash scripts/stop-office.sh"
   },
   "dependencies": {
     "better-sqlite3": "^12.8.0",
@@ -44,8 +48,8 @@
     "vite": "^5.4.0"
   },
   "build": {
-    "appId": "com.agentoffice.app",
-    "productName": "Agent Office",
+    "appId": "com.urbantribble.office",
+    "productName": "Urban Tribble Office",
     "directories": {
       "output": "release"
     },
