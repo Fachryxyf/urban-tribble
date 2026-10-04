@@ -103,6 +103,14 @@ print('assistant|Asisten')
     SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
     OFFICE_CONTEXT=$(bash "$SCRIPT_DIR/gather-context.sh" 2>/dev/null || echo "")
 
+    # Aturan anti-slop (skills/antislop-copywriting) — dipakai supaya balasan tidak terasa AI-generated
+    SLOP_RULES="Gaya bahaya anti-AI-slop (WAJIB):
+- Tanpa emoji sama sekali. Pakai kata biasa.
+- Jangan mulai dengan 'Tentu', 'Baik', 'Pasti', 'Senang membantu'.
+- Jangan pakai klise: 'hal yang tepat', 'penting untuk dicatat', 'jangan ragu', 'semoga membantu', 'kesimpulannya'.
+- Langsung ke isi, kalimat pendek, nada manusia kantor Indonesia (santai, to the point).
+- Maksimal 15 kata, satu kalimat kalau bisa."
+
     PERSONA=""
     if [ -f "$HOME/.agent-office/claude-persona.md" ]; then
         PERSONA=$(cat "$HOME/.agent-office/claude-persona.md")
@@ -118,7 +126,9 @@ for m in msgs:
 
     PROMPT="$PERSONA
 
-Kamu merespons sebagai $AGENT_NAME, staf divisi $AGENT_ROLE di kantor Urban Tribble. Tetap dalam karakter, balas dalam Bahasa Indonesia, santai dan singkat.
+$SLOP_RULES
+
+Kamu merespons sebagai $AGENT_NAME, staf divisi $AGENT_ROLE di kantor Urban Tribble. Tetap dalam karakter, balas dalam Bahasa Indonesia.
 
 $OFFICE_CONTEXT
 
@@ -127,7 +137,7 @@ $CONTEXT
 
 Balas pesan terbaru secara natural. Singkat (8-12 kata). Sambungkan dengan percakapan sebelumnya bila relevan."
 
-    REPLY=$(claude -p "$PROMPT" --max-turns 1 2>/dev/null | tr '\n' ' ' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+    REPLY=$(printf '%s' "$PROMPT" | python3 "$SCRIPT_DIR/llm-reply.py" 2>/dev/null | tr '\n' ' ' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
 
     [ -z "$REPLY" ] && { echo "[chat-ai] Balasan kosong, dilewati"; rm -f "$LOCK_FILE"; continue; }
 

@@ -7,7 +7,7 @@
  * Features:
  *  - Auto-reconnect with exponential back-off (capped at 30 s)
  *  - Returns events as they arrive via onEvent callback style AND as a state array
- *  - Exposes `connected` boolean and `mcpServers` roster
+ *  - Exposes `connected`boolean and `mcpServers`roster
  *  - Gracefully falls back to mock/offline mode when the server is unavailable
  */
 

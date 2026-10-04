@@ -109,7 +109,7 @@ const activeAgents = new Map()
  */
 function resolveAgentId(agent) {
   if (agent.id) return agent.id
-  const slug = `${agent.name ?? 'agent'}-${agent.role ?? 'worker'}`
+  const slug = `${agent.name ?? 'agent' }-${agent.role ?? 'worker' }`
   return slug.toLowerCase().replace(/[^a-z0-9-]/g, '-')
 }
 
@@ -190,7 +190,7 @@ app.get('/roster', (_req, res) => {
  */
 app.post('/event', (req, res) => {
   // Auth check
-  const authHeader = req.headers['authorization'] ?? ''
+  const authHeader = req.headers['authorization' ] ?? ''
   const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : ''
   if (token !== AUTH_TOKEN) {
     return res.status(401).json({ error: 'Unauthorized' })
@@ -240,22 +240,22 @@ function handleSlashCommand(cmd) {
       const agentCount = activeAgents.size
       const working = Array.from(activeAgents.values()).filter(a => a.state === 'working').length
       const clients = wss?.clients?.size ?? 0
-      return `📊 ${agentCount} staf aktif, ${working} sedang mengerjakan, ${clients} klien tersambung`
+      return `${agentCount} staf aktif, ${working} sedang mengerjakan, ${clients} klien tersambung`
     }
     case '/tim':
     case '/agents': {
       const agents = Array.from(activeAgents.values())
-      if (agents.length === 0) return '🏢 kantor lagi sepi — belum ada staf yang bertugas'
+      if (agents.length === 0) return 'kantor lagi sepi — belum ada staf yang bertugas'
       return agents.map(a => `${a.name} (${a.role}) — ${a.state}`).join(', ')
     }
     case '/hapus':
     case '/clear': {
       db.prepare('DELETE FROM messages').run()
-      return '🧹 obrolan dibersihkan'
+      return 'obrolan dibersihkan'
     }
     case '/bantuan':
     case '/help':
-      return '📋 Perintah: /laporan — statistik kantor, /tim — daftar staf, /hapus — hapus riwayat obrolan, /bantuan — pesan ini'
+      return 'Perintah: /laporan — statistik kantor, /tim — daftar staf, /hapus — hapus riwayat obrolan, /bantuan — pesan ini'
     default:
       return null
   }
@@ -323,7 +323,7 @@ let videoPausedSince = 0
 app.post('/chat/video-mode', (req, res) => {
   videoPaused = !!req.body?.enabled
   videoPausedSince = videoPaused ? Date.now() : 0
-  console.log(`[video-mode] chat polling ${videoPaused ? 'PAUSED' : 'RESUMED'}`)
+  console.log(`[video-mode] chat polling ${videoPaused ? 'PAUSED' :  'RESUMED' }`)
   res.json({ ok: true, videoPaused })
 })
 
@@ -428,7 +428,7 @@ app.post('/chat/cron-state', (req, res) => {
     try { state = JSON.parse(readFileSync(cronStatePath, 'utf8')) } catch {}
     state.paused = !!req.body?.paused
     writeFileSync(cronStatePath, JSON.stringify(state), 'utf8')
-    console.log(`[cron] Chat monitor ${state.paused ? 'PAUSED' : 'RESUMED'}`)
+    console.log(`[cron] Chat monitor ${state.paused ? 'PAUSED' :  'RESUMED' }`)
     res.json({ ok: true, paused: state.paused })
   } catch (err) {
     res.status(500).json({ error: err.message })
@@ -458,7 +458,7 @@ function processEvent(body) {
       // Proactive message — announce task in chat
       const taskShort = (record.task ?? '').slice(0, 50)
       if (taskShort) {
-        const chatMsg = addMessage({ sender: record.name, role: record.role, text: `mulai: ${taskShort}` })
+        const chatMsg = addMessage({ sender: record.name, role: record.role, text: `mulai: ${taskShort}`})
         broadcast({ type: 'chat_message', ...chatMsg })
       }
 
@@ -487,12 +487,12 @@ function processEvent(body) {
 
         // Proactive message — announce completion in chat
         const resultShort = (body.result ?? 'done').slice(0, 50)
-        const chatMsg = addMessage({ sender: agent.name, role: agent.role, text: `selesai: ${resultShort}` })
+        const chatMsg = addMessage({ sender: agent.name, role: agent.role, text: `selesai: ${resultShort}`})
         broadcast({ type: 'chat_message', ...chatMsg })
 
         // Notifikasi — alert kalau ada kegagalan
         if (/error|fail|gagal/i.test(body.result ?? '')) {
-          sendNotification('Tugas Gagal', agent.name + ' gagal')
+          sendNotification('Tugas Gagal', agent.name + 'gagal')
         }
       }
       console.log(`[-] Agent completed: ${id}`)
@@ -602,12 +602,12 @@ httpServer.listen(PORT, '127.0.0.1', () => {
 ║  GET   http://localhost:${PORT}/roster       ║
 ╚═══════════════════════════════════════════╝`)
 
-  console.log(`  Auth token written to: ${TOKEN_FILE}`)
+  console.log(`Auth token written to: ${TOKEN_FILE}`)
 
   if (mcpServers.length > 0) {
-    console.log(`  MCP servers discovered: ${mcpServers.join(', ')}`)
+    console.log(`MCP servers discovered: ${mcpServers.join(', ')}`)
   } else {
-    console.log('  No MCP servers found in ~/.claude/settings.json')
+    console.log('No MCP servers found in ~/.claude/settings.json')
   }
   console.log()
 })

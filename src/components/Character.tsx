@@ -31,9 +31,9 @@ function getDirectionFromDelta(dx: number, dy: number): SpriteDirection {
   //   up-left    → front-right
   //   down-right → rear-left
   //   down-left  → front-left (facing camera, moving left)
-  if (dy < 0 && dx >= 0)  return 'front-left'   // up-right
-  if (dy < 0 && dx < 0)   return 'front-right'  // up-left
-  if (dy >= 0 && dx >= 0)  return 'rear-left'    // down-right
+  if (dy < 0 && dx >= 0)  return 'front-left' // up-right
+  if (dy < 0 && dx < 0)   return 'front-right' // up-left
+  if (dy >= 0 && dx >= 0)  return 'rear-left' // down-right
   return 'front-left'                             // down-left
 }
 
@@ -148,7 +148,7 @@ const Character: React.FC<CharacterProps> = ({ agent, idleDurationMs = 0, zIndex
       )}
 
       <div className="char-body-group">
-        <div className="char-shadow" />
+        <div className="char-shadow"/>
         <img
           src={spriteSrc}
           alt={agent.name}

@@ -11,8 +11,8 @@ function resolveSpriteUrl(sprite: string): string | null {
   // Direct asset key lookup
   if (ASSETS[sprite]) return ASSETS[sprite].path
 
-  // Legacy sprite-sheet format "sheet-name:frame" — no image available
-  if (sprite.includes(':')) return null
+  // Legacy sprite-sheet format "sheet-name:frame"— no image available
+  if (sprite.includes(' : ')) return null
 
   // Try as direct path
   return sprite
@@ -67,17 +67,17 @@ const FurnitureRenderer: React.FC<FurnitureRendererProps> = ({ items, onItemClic
         return (
           <div
             key={item.id}
-            className={`furniture-item${clickable ? ' interactive clickable-furniture' : ''}`}
+            className={`furniture-item${clickable ? 'interactive clickable-furniture' :  '' }`}
             style={{
               position: 'absolute',
               left: `${item.x}%`,
               top: `${item.y}%`,
               transform: 'translate(-50%, -100%)',
               zIndex: item.zIndex ?? Math.round(item.y),
-              pointerEvents: clickable ? 'auto' : 'none',
-              cursor: clickable ? 'pointer' : 'default',
+              pointerEvents: clickable ? 'auto' :  'none',
+              cursor: clickable ? 'pointer' :  'default',
             }}
-            title={item.label || (clickable ? 'Klik untuk berinteraksi' : undefined)}
+            title={item.label || (clickable ? 'Klik untuk berinteraksi': undefined)}
             onClick={clickable && onItemClick ? () => onItemClick(item.id) : undefined}
           >
             <img

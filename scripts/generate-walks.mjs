@@ -22,28 +22,28 @@ const CHARACTERS = [
 async function generateWalk(char) {
   const checkPath = join(SPRITES_DIR, `${char.id}-walk-0.png`)
   if (existsSync(checkPath)) {
-    console.log(`⏭️  ${char.id} walk already exists`)
+    console.log(`⏭ ${char.id} walk already exists`)
     return
   }
 
   const refPath = join(SPRITES_DIR, `${char.id}.png`)
   if (!existsSync(refPath)) {
-    console.log(`❌ No base sprite for ${char.id}`)
+    console.log(`No base sprite for ${char.id}`)
     return
   }
 
-  console.log(`🚶 Generating walk for ${char.id}...`)
+  console.log(`Generating walk for ${char.id}...`)
   const refImage = await Base64Image.fromFile(refPath)
 
   try {
     // Step 1: Estimate skeleton from the character
-    console.log(`   Estimating skeleton...`)
+    console.log(`Estimating skeleton...`)
     const skeleton = await client.estimateSkeleton({
       imageSize: { width: 32, height: 32 },
       image: refImage,
     })
 
-    console.log(`   Got skeleton, keys: ${Object.keys(skeleton)}`)
+    console.log(`Got skeleton, keys: ${Object.keys(skeleton)}`)
 
     // Step 2: Use skeleton for animation
     const response = await client.animateWithSkeleton({
@@ -60,14 +60,14 @@ async function generateWalk(char) {
         const framePath = join(SPRITES_DIR, `${char.id}-walk-${i}.png`)
         await response.images[i].saveToFile(framePath)
       }
-      console.log(`✅ ${char.id}: ${response.images.length} walk frames`)
+      console.log(`${char.id}: ${response.images.length} walk frames`)
     }
   } catch (err) {
-    console.error(`❌ ${char.id} failed: ${err.message?.slice(0, 150)}`)
+    console.error(`${char.id} failed: ${err.message?.slice(0, 150)}`)
 
     // Ultimate fallback: generate 4 slightly varied static sprites
     // using pixflux with walk descriptions
-    console.log(`   Generating walk variants with pixflux...`)
+    console.log(`Generating walk variants with pixflux...`)
     const walkDescs = [
       `${char.desc} walking left foot forward`,
       `${char.desc} standing`,
@@ -91,20 +91,20 @@ async function generateWalk(char) {
         })
         const framePath = join(SPRITES_DIR, `${char.id}-walk-${i}.png`)
         await res.image.saveToFile(framePath)
-        console.log(`   ✅ Frame ${i} saved`)
+        console.log(`Frame ${i} saved`)
       } catch (e2) {
-        console.error(`   ❌ Frame ${i} failed: ${e2.message?.slice(0, 80)}`)
+        console.error(`Frame ${i} failed: ${e2.message?.slice(0, 80)}`)
       }
     }
   }
 }
 
 async function main() {
-  console.log('🚶 Walk Animation Generator\n')
+  console.log('Walk Animation Generator\n')
   for (const char of CHARACTERS) {
     await generateWalk(char)
   }
-  console.log('\n🏁 Done!')
+  console.log('\n Done!')
 }
 
 main().catch(err => {

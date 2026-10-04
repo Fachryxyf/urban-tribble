@@ -8,7 +8,7 @@ config({ path: '.env' })
 const replicate = new Replicate({ auth: process.env.REPLICATE_API_TOKEN })
 
 async function generate(prompt, filename) {
-  console.log(`🏢 Generating ${filename}...`)
+  console.log(`Generating ${filename}...`)
 
   const output = await replicate.run(
     'google/nano-banana-pro',
@@ -31,7 +31,7 @@ async function generate(prompt, filename) {
   const buffer = Buffer.concat(chunks)
   const outPath = join(process.cwd(), 'public', filename)
   writeFileSync(outPath, buffer)
-  console.log(`✅ Saved ${filename} (${(buffer.length / 1024).toFixed(1)}KB)`)
+  console.log(`Saved ${filename} (${(buffer.length / 1024).toFixed(1)}KB)`)
 }
 
 async function main() {
@@ -48,6 +48,6 @@ async function main() {
 }
 
 main().catch(err => {
-  console.error('❌ Error:', err.message)
+  console.error('Error:', err.message)
   process.exit(1)
 })

@@ -6,7 +6,7 @@
  */
 
 // Muat config pengguna (office.config.json) — dibundel oleh Vite
-let userConfig: { boss?: { name?: string; sprite?: string; color?: string; emoji?: string } } = {}
+let userConfig: { boss?: { name?: string; sprite?: string; color?: string; icon?: string } } = {}
 try {
   // Vite menangani import JSON saat build
   // @ts-ignore office.config.json dibuat lokal dari office.config.example.json
@@ -18,14 +18,14 @@ try {
 const bossName   = userConfig.boss?.name   ?? 'Bos'
 const bossSprite = userConfig.boss?.sprite ?? 'Me-1'
 const bossColor  = userConfig.boss?.color  ?? '#ff4444'
-const bossEmoji  = userConfig.boss?.emoji  ?? '👑'
+const bossIcon = userConfig.boss?.icon ?? 'crown'
 
 // Bos — selalu ada di kantor
 export const BOSS_CHAR = bossSprite
 export const BOSS_ROLE = 'boss'
 export const BOSS_NAME = bossName
 export const BOSS_COLOR = bossColor
-export const BOSS_EMOJI = bossEmoji
+export const BOSS_ICON = bossIcon
 
 // Peta role → nama dasar sprite karakter (di /sprites/characters/)
 export const ROLE_TO_CHAR: Record<string, string> = {

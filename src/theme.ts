@@ -76,7 +76,7 @@ export function setTheme(name: ThemeName) {
 }
 
 export function toggleTheme() {
-  setTheme(state.name === 'office' ? 'default' : 'office')
+  setTheme(state.name === 'office' ? 'default' :  'office')
 }
 
 export function subscribeTheme(fn: () => void): () => void {
@@ -129,7 +129,7 @@ export function getCharacterBaseForRole(role: string, defaultBase: string): stri
 }
 
 export function getSpriteDir(): string {
-  return state.name === 'office' ? '/sprites/office/characters' : '/sprites/characters'
+  return state.name === 'office' ? '/sprites/office/characters' :  '/sprites/characters'
 }
 
 /** Kept signature-compatible for existing callers — agentId ignored; role is the key. */
@@ -140,18 +140,18 @@ export function getSpritePath(_agentId: string, role: string, defaultBase: strin
 
 export function getRoomImage(phase: 'day' | 'night'): string {
   if (state.name === 'office') {
-    return phase === 'night' ? '/rooms/office-night-dm.png' : '/rooms/office-day-dm.png'
+    return phase === 'night' ? '/rooms/office-night-dm.png' :  '/rooms/office-day-dm.png'
   }
-  return phase === 'night' ? '/rooms/office-night.png' : '/rooms/office-day.png'
+  return phase === 'night' ? '/rooms/office-night.png' :  '/rooms/office-day.png'
 }
 
 /** Returns the ROLE currently cast as Angela (if any), plus cat sprite path. */
 export function getAngelaCat(): { role: string; catSprite: string } | null {
   if (state.name !== 'office' || !state.angelaRole || !state.angelaCat) return null
-  return { role: state.angelaRole, catSprite: `/sprites/office/cats/${state.angelaCat}.png` }
+  return { role: state.angelaRole, catSprite: `/sprites/office/cats/${state.angelaCat}.png`}
 }
 
-/** Human-readable display name for a slug (e.g. "michael-scott" → "Michael Scott") */
+/** Human-readable display name for a slug (e.g. "michael-scott"→ "Michael Scott") */
 function slugToName(slug: string): string {
   return slug.split('-').map(p => p[0].toUpperCase() + p.slice(1)).join(' ')
 }
@@ -209,7 +209,7 @@ const OFFICE_WATER = [
 ]
 
 const DEFAULT_SPAWN = [
-  'lapor diri!', 'siap kerja', 'absen hadir ✅',
+  'lapor diri!', 'siap kerja', 'absen hadir ',
   'kopi dulu, baru kerja', "gas mulai", 'buka email...', 'cek inbox dulu',
 ]
 const DEFAULT_WORK = [
@@ -217,10 +217,10 @@ const DEFAULT_WORK = [
   'cek dokumen dulu', 'rekap data', 'tunggu bentar ya',
 ]
 const DEFAULT_DONE = [
-  'selesai!', 'beres ✅', 'siap kirim', 'tuntas',
+  'selesai!', 'beres ', 'siap kirim', 'tuntas',
   'done, next!', 'gas lanjut', 'laporan dikirim',
 ]
-const DEFAULT_COFFEE = ['ngopi dulu', 'butuh kopi', 'ambil kopi', 'rehat kopi']
+const DEFAULT_COFFEE = ['ngopi dulu', 'butuh kopi', 'ambil kopi', 'rehat kopi' ]
 const DEFAULT_WATER = [
   'minum dulu', 'isi air', 'rehat sebentar', 'isi botol',
   'cek hidrasi', 'jalan ke dispenser',
@@ -236,21 +236,21 @@ export function themedWater(): string  { return pick(state.name === 'office' ? O
 // Parallel tool-output messages keyed by role — used when ?sim or ?video loads with Office theme.
 export const OFFICE_SIM_TOOL_MESSAGES: Record<string, string[]> = {
   'keuangan': [
-    '⚡ rekap invoice bulan Maret...',
-    '⚠️ ada angka nyasar di laporan — kayaknya salah ketik',
-    '🚨 budget kopi habis. lagi. klasik.',
+    'rekap invoice bulan Maret...',
+    'ada angka nyasar di laporan — kayaknya salah ketik',
+    'budget kopi habis. lagi. klasik.',
     'cek ulang sebelum Toby... eh, sebelum direksi tahu',
   ],
   'hrd': [
-    '⚡ absen pagi dicek satu-satu',
-    '📋 3 pengajuan cuti menunggu approval',
-    '🔍 kandidat interview sore nanti — 2 orang',
+    'absen pagi dicek satu-satu',
+    '3 pengajuan cuti menunggu approval',
+    'kandidat interview sore nanti — 2 orang',
     'slip gaji sudah dibagikan, stanley komplain lagi',
   ],
   'admin': [
-    '⚡ arsip surat masuk diproses',
-    '🖨️ cetak & stempel beres',
-    '📁 filing dokumen vendor sudah rapi',
+    'arsip surat masuk diproses',
+    'cetak & stempel beres',
+    'filing dokumen vendor sudah rapi',
     'surat keluar siap dikirim ke cabang',
   ],
   'assistant': [
@@ -337,13 +337,13 @@ const OFFICE_PROPS_BY_SLUG: Record<string, string[]> = {
     '/sprites/office/props/cpr-dummy-mask.png',
     '/sprites/office/props/schrute-buck.png',
   ],
-  'jim-halpert':     ['/sprites/office/props/jello-stapler.png'],
-  'stanley-hudson':  ['/sprites/office/props/pretzel-day.png'],
-  'jan-levinson':    ['/sprites/office/props/serenity-by-jan-candle.png'],
+  'jim-halpert':     ['/sprites/office/props/jello-stapler.png' ],
+  'stanley-hudson':  ['/sprites/office/props/pretzel-day.png' ],
+  'jan-levinson':    ['/sprites/office/props/serenity-by-jan-candle.png' ],
   // Why: Finer Things Club members share the prop — Oscar, Pam, and Toby.
-  'oscar-martinez':  ['/sprites/office/props/finer-things-club.png'],
-  'pam-beesly':      ['/sprites/office/props/finer-things-club.png'],
-  'toby-flenderson': ['/sprites/office/props/finer-things-club.png'],
+  'oscar-martinez':  ['/sprites/office/props/finer-things-club.png' ],
+  'pam-beesly':      ['/sprites/office/props/finer-things-club.png' ],
+  'toby-flenderson': ['/sprites/office/props/finer-things-club.png' ],
   // Angela: randomized second cat assigned per-role below — not a prop file.
 }
 

@@ -57,7 +57,7 @@ let nextMsgId = 1
 function makeMsgId() { return nextMsgId++ }
 
 // Room spots for main office
-const MAIN_ROOM = ROOMS['main-office']
+const MAIN_ROOM = ROOMS['main-office' ]
 const ENTRY = MAIN_ROOM.entryPoint           // door position (%)
 const COFFEE_SPOT = MAIN_ROOM.agentSpots.find(s => s.type === 'coffee') ?? null
 const WATER_SPOTS  = MAIN_ROOM.agentSpots.filter(s => s.type === 'water')
@@ -89,14 +89,14 @@ function computePath(
 }
 
 // Role yang menuju lemari arsip, bukan meja (menelusuri dokumen)
-const FILING_ROLES = new Set(['staff'])
+const FILING_ROLES = new Set(['staff' ])
 
 // The boss — always in the office, permanent desk (spot-1)
 const BOSS_ID = `boss-${BOSS_NAME.toLowerCase()}`
 const BOSS_SPOT = MAIN_ROOM.agentSpots.find(s => s.id === 'spot-1') ?? MAIN_ROOM.agentSpots.find(s => s.type === 'desk') ?? null
 
 function createBoss(): Agent {
-  const cfg = AGENT_CONFIGS[BOSS_ROLE] ?? AGENT_CONFIGS['default']
+  const cfg = AGENT_CONFIGS[BOSS_ROLE] ?? AGENT_CONFIGS['default' ]
   const spot = BOSS_SPOT ?? { id: 'spot-temp', type: 'desk' as const, x: 28.9, y: 66 }
   const entry = MAIN_ROOM.entryPoint
   const target = { x: spot.x, y: spot.y }
@@ -116,7 +116,7 @@ function createBoss(): Agent {
     task: 'Memimpin kantor',
     statusText: 'masuk kantor',
     color: cfg.color,
-    emoji: cfg.emoji,
+    icon: cfg.icon,
     hiredAt: Date.now(),
     pathQueue: computePath(entry, target),
   }
@@ -128,7 +128,7 @@ const CLAUDE_ROLE = 'assistant'
 const CLAUDE_SPOT = MAIN_ROOM.agentSpots.find(s => s.id === 'spot-2') ?? null
 
 function createClaude(): Agent {
-  const cfg = AGENT_CONFIGS[CLAUDE_ROLE] ?? AGENT_CONFIGS['default']
+  const cfg = AGENT_CONFIGS[CLAUDE_ROLE] ?? AGENT_CONFIGS['default' ]
   const spot = CLAUDE_SPOT ?? { id: 'spot-2', type: 'desk' as const, x: 37.9, y: 68.2, spriteFacing: 'rear-right' as const }
   const entry = MAIN_ROOM.entryPoint
   const target = { x: spot.x, y: spot.y }
@@ -148,7 +148,7 @@ function createClaude(): Agent {
     task: 'Asisten kantor',
     statusText: 'masuk kantor',
     color: cfg.color,
-    emoji: cfg.emoji,
+    icon: cfg.icon,
     hiredAt: Date.now() + 500, // arrives just after the boss
     pathQueue: computePath(entry, target),
   }
@@ -200,30 +200,30 @@ const SIM_SCENARIOS = [
     role: 'keuangan',
     task: 'Rekap invoice & pengeluaran bulan Maret',
     slackMessages: [
-      '💰 buka spreadsheet pengeluaran Maret',
-      '⚠️ 3 invoice belum ada nomor seri — ditandai',
-      '📊 nyocokin kas dengan rekening koran',
-      '✅ rekap beres — tinggal ditandatangani',
+      'buka spreadsheet pengeluaran Maret',
+      '3 invoice belum ada nomor seri — ditandai',
+      'nyocokin kas dengan rekening koran',
+      'rekap beres — tinggal ditandatangani',
     ],
   },
   {
     role: 'hrd',
     task: 'Rekap absensi & jadwal shift minggu ini',
     slackMessages: [
-      '👥 tarik data absen dari mesin fingerprint',
-      '📋 2 izin sakit masuk, dicatat',
-      '🔍 cek jadwal shift biar gak bentrok',
-      '✅ absensi beres — laporan siap ke atasan',
+      'tarik data absen dari mesin fingerprint',
+      '2 izin sakit masuk, dicatat',
+      'cek jadwal shift biar gak bentrok',
+      'absensi beres — laporan siap ke atasan',
     ],
   },
   {
     role: 'admin',
     task: 'Arsip surat masuk & siapkan surat keluar',
     slackMessages: [
-      '📁 sortir surat masuk pagi ini',
-      '🖨️ cetak 5 surat keluar buat tanda tangan',
-      '📄 scanning dokumen vendor ke folder bersama',
-      '✅ arsip beres, meja rapi',
+      'sortir surat masuk pagi ini',
+      'cetak 5 surat keluar buat tanda tangan',
+      'scanning dokumen vendor ke folder bersama',
+      'arsip beres, meja rapi',
     ],
   },
 ]
@@ -352,7 +352,7 @@ const App: React.FC = () => {
         const msg = Array.isArray(interaction.chatMessage)
           ? interaction.chatMessage[Math.floor(Math.random() * interaction.chatMessage.length)]
           : interaction.chatMessage
-        const bossCfg = AGENT_CONFIGS[BOSS_ROLE] ?? AGENT_CONFIGS['default']
+        const bossCfg = AGENT_CONFIGS[BOSS_ROLE] ?? AGENT_CONFIGS['default' ]
         // Use setMessages directly to avoid addMsg dependency ordering
         setMessages(prev => [...prev.slice(-50), {
           id: makeMsgId(),
@@ -494,11 +494,11 @@ const App: React.FC = () => {
   useEffect(() => {
     if (arrivedRef.current) return
     arrivedRef.current = true
-    const bossCfg = AGENT_CONFIGS[BOSS_ROLE] ?? AGENT_CONFIGS['default']
-    addMsg(bossCfg.title, BOSS_ROLE, bossCfg.color, '👑 masuk kantor')
-    const claudeCfg = AGENT_CONFIGS[CLAUDE_ROLE] ?? AGENT_CONFIGS['default']
+    const bossCfg = AGENT_CONFIGS[BOSS_ROLE] ?? AGENT_CONFIGS['default' ]
+    addMsg(bossCfg.title, BOSS_ROLE, bossCfg.color, 'masuk kantor')
+    const claudeCfg = AGENT_CONFIGS[CLAUDE_ROLE] ?? AGENT_CONFIGS['default' ]
     setTimeout(() => {
-      addMsg(claudeCfg.title, CLAUDE_ROLE, claudeCfg.color, '🤖 masuk kantor')
+      addMsg(claudeCfg.title, CLAUDE_ROLE, claudeCfg.color, 'masuk kantor')
     }, 1500)
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -531,7 +531,7 @@ const App: React.FC = () => {
       } else if (t < 300) {
         // Daytime
         opacity = 0
-        phase = t < 180 ? 'morning' : 'afternoon'
+        phase = t < 180 ? 'morning' :  'afternoon'
       } else if (t < 360) {
         // Dusk: fade day→night (0→1)
         opacity = (t - 300) / 60
@@ -587,7 +587,7 @@ const App: React.FC = () => {
           }
 
           if (!spot) {
-            const cfg = AGENT_CONFIGS[role] ?? AGENT_CONFIGS['default']
+            const cfg = AGENT_CONFIGS[role] ?? AGENT_CONFIGS['default' ]
             effects.push({ msg: { sender: name, role, color: cfg.color, text: 'waiting for a desk...' } })
             return prev
           }
@@ -607,9 +607,9 @@ const App: React.FC = () => {
             breakStartedAt: null,
           })
 
-          const cfg = AGENT_CONFIGS[role] ?? AGENT_CONFIGS['default']
+          const cfg = AGENT_CONFIGS[role] ?? AGENT_CONFIGS['default' ]
           effects.push({
-            msg: { sender: name, role, color: cfg.color, text: task ? `📋 ${task}` : spawnMessage() },
+            msg: { sender: name, role, color: cfg.color, text: task ? `${task}` : spawnMessage() },
             sfx: 'doorOpen',
           })
 
@@ -625,9 +625,9 @@ const App: React.FC = () => {
             // Targeted update — specific agent
             return prev.map(a => {
               if (a.id !== id) return a
-              const cfg = AGENT_CONFIGS[a.role] ?? AGENT_CONFIGS['default']
+              const cfg = AGENT_CONFIGS[a.role] ?? AGENT_CONFIGS['default' ]
               effects.push({
-                msg: { sender: a.name, role: a.role, color: cfg.color, text: `⚡ ${statusMsg}` },
+                msg: { sender: a.name, role: a.role, color: cfg.color, text: `${statusMsg}` },
               })
               return { ...a, state: 'working' as const, statusText: statusMsg }
             })
@@ -637,9 +637,9 @@ const App: React.FC = () => {
           const workers = prev.filter(a => a.state === 'working' && a.id !== BOSS_ID)
           if (workers.length > 0) {
             const target = workers[Math.floor(Math.random() * workers.length)]
-            const cfg = AGENT_CONFIGS[target.role] ?? AGENT_CONFIGS['default']
+            const cfg = AGENT_CONFIGS[target.role] ?? AGENT_CONFIGS['default' ]
             effects.push({
-              msg: { sender: target.name, role: target.role, color: cfg.color, text: `⚡ ${statusMsg}` },
+              msg: { sender: target.name, role: target.role, color: cfg.color, text: `${statusMsg}` },
             })
             return prev.map(a =>
               a.id === target.id ? { ...a, statusText: statusMsg } : a
@@ -667,31 +667,31 @@ const App: React.FC = () => {
 
           return prev.map(a => {
             if (a.id !== id) return a
-            const cfg = AGENT_CONFIGS[a.role] ?? AGENT_CONFIGS['default']
+            const cfg = AGENT_CONFIGS[a.role] ?? AGENT_CONFIGS['default' ]
             const resultMsg = event.result ?? doneMessage()
             effects.push({
-              msg: { sender: a.name, role: a.role, color: cfg.color, text: `✅ ${resultMsg}` },
+              msg: { sender: a.name, role: a.role, color: cfg.color, text: `${resultMsg}` },
               sfx: 'celebration',
             })
 
             // Boss replies to completed tasks
-            const bossCfg = AGENT_CONFIGS[BOSS_ROLE] ?? AGENT_CONFIGS['default']
+            const bossCfg = AGENT_CONFIGS[BOSS_ROLE] ?? AGENT_CONFIGS['default' ]
             const bossReplies = [
-              `keren ${a.name} 👊`,
-              `mantap 🔥`,
+              `keren ${a.name} `,
+              `mantap `,
               `gas lanjut!`,
               `bagus, ngopi dulu sana`,
-              `top 💯`,
+              `top `,
               `bagus, siapa berikutnya?`,
               `cepat juga ya`,
-              `rapi 👌`,
+              `rapi `,
               `thanks ${a.name}`,
               `oke. tugas berikutnya...`,
             ]
             // Why: when Office theme is on, Michael Scott occasionally lands his signature line.
             const isMichael = getTheme() === 'office'
             const reply = isMichael && Math.random() < 0.25
-              ? `That's what she said 😏`
+              ? `That's what she said`
               : bossReplies[Math.floor(Math.random() * bossReplies.length)]
             effects.push({
               msg: { sender: bossCfg.title, role: BOSS_ROLE, color: bossCfg.color, text: reply },
@@ -724,12 +724,12 @@ const App: React.FC = () => {
           const tool = (event as any).tool ?? ''
           const id = event.agentId ?? event.agent?.id
           if (!id) return prev
-          const mcpMsg = `🔌 ${server} → ${tool}`
+          const mcpMsg = `${server} → ${tool}`
           return prev.map(a => {
             if (a.id !== id) return a
-            const cfg = AGENT_CONFIGS[a.role] ?? AGENT_CONFIGS['default']
+            const cfg = AGENT_CONFIGS[a.role] ?? AGENT_CONFIGS['default' ]
             effects.push({ msg: { sender: a.name, role: a.role, color: cfg.color, text: mcpMsg } })
-            return { ...a, statusText: `${server}.${tool}` }
+            return { ...a, statusText: `${server}.${tool}`}
           })
         }
 
@@ -779,7 +779,7 @@ const App: React.FC = () => {
           setChatTypingUser(null)
 
           // Skip messages from the boss — those are added locally by onSendMessage
-          const bossCfg = AGENT_CONFIGS[BOSS_ROLE] ?? AGENT_CONFIGS['default']
+          const bossCfg = AGENT_CONFIGS[BOSS_ROLE] ?? AGENT_CONFIGS['default' ]
           if (sender === bossCfg.title || sender.toLowerCase() === bossCfg.title.toLowerCase()) {
             return prev
           }
@@ -800,8 +800,8 @@ const App: React.FC = () => {
           let msgSender: string, msgRole: string, msgColor: string
 
           // Kalau pengirim balasan AI (dari watcher), selalu atribusikan ke Asisten
-          if (['claude', 'asisten'].includes(sender.toLowerCase())) {
-            const claudeCfg = AGENT_CONFIGS[CLAUDE_ROLE] ?? AGENT_CONFIGS['default']
+          if (['claude', 'asisten' ].includes(sender.toLowerCase())) {
+            const claudeCfg = AGENT_CONFIGS[CLAUDE_ROLE] ?? AGENT_CONFIGS['default' ]
             msgSender = claudeCfg.title; msgRole = CLAUDE_ROLE; msgColor = claudeCfg.color
           } else if (role && AGENT_CONFIGS[role]) {
             const cfg = AGENT_CONFIGS[role]
@@ -811,10 +811,10 @@ const App: React.FC = () => {
             const workers = prev.filter(a => a.id !== BOSS_ID && a.id !== CLAUDE_ID && a.state === 'working')
             if (workers.length > 0) {
               const agent = workers[Math.floor(Math.random() * workers.length)]
-              const cfg = AGENT_CONFIGS[agent.role] ?? AGENT_CONFIGS['default']
+              const cfg = AGENT_CONFIGS[agent.role] ?? AGENT_CONFIGS['default' ]
               msgSender = agent.name; msgRole = agent.role; msgColor = cfg.color
             } else {
-              const claudeCfg = AGENT_CONFIGS[CLAUDE_ROLE] ?? AGENT_CONFIGS['default']
+              const claudeCfg = AGENT_CONFIGS[CLAUDE_ROLE] ?? AGENT_CONFIGS['default' ]
               msgSender = claudeCfg.title; msgRole = CLAUDE_ROLE; msgColor = claudeCfg.color
             }
           }
@@ -852,13 +852,13 @@ const App: React.FC = () => {
       // Why: roles are synthetic "dm-0..dm-9" so each slot gets its own cast entry
       const STAFF_COUNT = 10
       const ROTATION_MS = 9000 // Why: fast enough to see all 22 in <2 min
-      const ROLES = ['keuangan', 'hrd', 'admin', 'sekretaris', 'logistik', 'pemasaran'] as const
+      const ROLES = ['keuangan', 'hrd', 'admin', 'sekretaris', 'logistik', 'pemasaran' ] as const
       let lastRetired: string | null = null
 
       const spawnSlot = (slotIdx: number, initialDelay = 0) => {
         const role = `dm-slot-${slotIdx}`
         const baseRole = ROLES[slotIdx % ROLES.length]
-        const cfg = AGENT_CONFIGS[baseRole] ?? AGENT_CONFIGS['default']
+        const cfg = AGENT_CONFIGS[baseRole] ?? AGENT_CONFIGS['default' ]
         const slug = nextUnusedOfficeCharacter(new Set(lastRetired ? [lastRetired] : []))
         const displayName = displayNameFromSlug(slug)
 
@@ -921,7 +921,7 @@ const App: React.FC = () => {
           const speaker = staff[Math.floor(Math.random() * staff.length)]
           const lines = OFFICE_SIM_TOOL_MESSAGES[ROLES[parseInt(speaker.role.split('-')[2], 10) % ROLES.length]] ?? []
           const line = lines[Math.floor(Math.random() * lines.length)] ?? 'jual kertas'
-          const cfg = AGENT_CONFIGS[ROLES[0]] ?? AGENT_CONFIGS['default']
+          const cfg = AGENT_CONFIGS[ROLES[0]] ?? AGENT_CONFIGS['default' ]
           addMsg(speaker.name, speaker.role, cfg.color, line)
           return prev
         })
@@ -947,13 +947,13 @@ const App: React.FC = () => {
           setChatTypingUser(sender)
         }, delay))
         timers.push(setTimeout(() => {
-          const cfg = AGENT_CONFIGS[role] ?? AGENT_CONFIGS['default']
+          const cfg = AGENT_CONFIGS[role] ?? AGENT_CONFIGS['default' ]
           setChatTypingUser(null)
           addMsg(sender, role, cfg.color, msg)
         }, delay + 1500))
       } else {
         timers.push(setTimeout(() => {
-          const cfg = AGENT_CONFIGS[role] ?? AGENT_CONFIGS['default']
+          const cfg = AGENT_CONFIGS[role] ?? AGENT_CONFIGS['default' ]
           addMsg(sender, role, cfg.color, msg)
         }, delay))
       }
@@ -965,8 +965,8 @@ const App: React.FC = () => {
         setMessages(prev => {
           const target = prev[prev.length - 2]
           if (target && !target.reactions?.length) {
-            const emoji = ['👍', '🔥', '😂', '🚀', '💯'][Math.floor(Math.random() * 5)]
-            return prev.map(m => m.id === target.id ? { ...m, reactions: [emoji] } : m)
+            const icon = ['like', 'fire', 'star', 'rocket', 'party' ][Math.floor(Math.random() * 5)]
+            return prev.map(m => m.id === target.id ? { ...m, reactions: [icon] } : m)
           }
           return prev
         })
@@ -975,7 +975,7 @@ const App: React.FC = () => {
 
     // Phase 1: Stagger-spawn 3 agents (1s, 3s, 5s) with proactive "starting:" messages
     SIM_SCENARIOS.forEach((sim, i) => {
-      const cfg = AGENT_CONFIGS[sim.role] ?? AGENT_CONFIGS['default']
+      const cfg = AGENT_CONFIGS[sim.role] ?? AGENT_CONFIGS['default' ]
       const spawnAt = 1000 + i * 2500
       timers.push(setTimeout(() => {
         handleEvent({
@@ -1003,7 +1003,7 @@ const App: React.FC = () => {
         const sim = SIM_SCENARIOS[idx]
         const msgIdx = msgIndexes[idx]
         if (msgIdx < sim.slackMessages.length) {
-          const cfg = AGENT_CONFIGS[sim.role] ?? AGENT_CONFIGS['default']
+          const cfg = AGENT_CONFIGS[sim.role] ?? AGENT_CONFIGS['default' ]
           // Show typing indicator before every other progress message
           const useTyping = msgIdx % 2 === 0
           if (useTyping) {
@@ -1068,7 +1068,7 @@ const App: React.FC = () => {
 
     // Phase 4: Staff arsip masuk di tengah jalan (menelusuri dokumen lama)
     timers.push(setTimeout(() => {
-      const staffCfg = AGENT_CONFIGS['staff'] ?? AGENT_CONFIGS['default']
+      const staffCfg = AGENT_CONFIGS['staff' ] ?? AGENT_CONFIGS['default' ]
       handleEvent({
         type: 'agent_spawned',
         agent: {
@@ -1102,12 +1102,12 @@ const App: React.FC = () => {
         result: 'Surat keluar siap dikirim — tinggal tanda tangan',
       })
       timers.push(setTimeout(() => {
-        const adminCfg = AGENT_CONFIGS['admin'] ?? AGENT_CONFIGS['default']
+        const adminCfg = AGENT_CONFIGS['admin' ] ?? AGENT_CONFIGS['default' ]
         addMsg(adminCfg.title, 'admin', adminCfg.color, 'selesai: Surat keluar siap dikirim — tinggal tanda tangan')
       }, 800))
       // Staf pengganti datang
       timers.push(setTimeout(() => {
-        const cfg = AGENT_CONFIGS['logistik'] ?? AGENT_CONFIGS['default']
+        const cfg = AGENT_CONFIGS['logistik' ] ?? AGENT_CONFIGS['default' ]
         handleEvent({
           type: 'agent_spawned',
           agent: {
@@ -1137,14 +1137,14 @@ const App: React.FC = () => {
   useEffect(() => {
     if (!isVideoMode) return
     const timers: ReturnType<typeof setTimeout>[] = []
-    const bossCfg = AGENT_CONFIGS[BOSS_ROLE] ?? AGENT_CONFIGS['default']
+    const bossCfg = AGENT_CONFIGS[BOSS_ROLE] ?? AGENT_CONFIGS['default' ]
 
     const officeSim0 = getTheme() === 'office'
 
     // 0-3s: Office is just Antony, settling in
     timers.push(setTimeout(() => {
       addMsg(bossCfg.title, BOSS_ROLE, bossCfg.color,
-        officeSim0 ? "👑 World's Best Boss clocked in, let's sell some paper" : '👑 masuk kantor, semangat!')
+        officeSim0 ? "World's Best Boss clocked in, let's sell some paper" : 'masuk kantor, semangat!')
     }, 2000))
 
     // 4s: Antony types a question in Slack
@@ -1172,14 +1172,14 @@ const App: React.FC = () => {
     // Why: swap to Office-themed chatter when /the-office mode is on at sim start
     const isOfficeSim = getTheme() === 'office'
     const defaultToolMessages = [
-      { t: 16000, sender: 'Keuangan', role: 'keuangan', text: '⚡ buka laporan kas Maret' },
-      { t: 18000, sender: 'HRD', role: 'hrd', text: '⚡ tarik data absen hari ini' },
-      { t: 20000, sender: 'Keuangan', role: 'keuangan', text: '⚠️ ada 3 invoice lewat tempo — ditagih hari ini' },
-      { t: 22000, sender: 'Admin', role: 'admin', text: '⚡ scan surat masuk pagi ini' },
-      { t: 24000, sender: 'HRD', role: 'hrd', text: '🔍 jadwal shift Jumat bentrok' },
-      { t: 26000, sender: 'Keuangan', role: 'keuangan', text: '🚨 budget ATK tinggal 15%' },
-      { t: 28000, sender: 'Admin', role: 'admin', text: '⚡ upload dokumen vendor ke folder bersama' },
-      { t: 30000, sender: 'HRD', role: 'hrd', text: '💡 usul: jadwal kerja fleksibel hari Jumat' },
+      { t: 16000, sender: 'Keuangan', role: 'keuangan', text: 'buka laporan kas Maret' },
+      { t: 18000, sender: 'HRD', role: 'hrd', text: 'tarik data absen hari ini' },
+      { t: 20000, sender: 'Keuangan', role: 'keuangan', text: 'ada 3 invoice lewat tempo — ditagih hari ini' },
+      { t: 22000, sender: 'Admin', role: 'admin', text: 'scan surat masuk pagi ini' },
+      { t: 24000, sender: 'HRD', role: 'hrd', text: 'jadwal shift Jumat bentrok' },
+      { t: 26000, sender: 'Keuangan', role: 'keuangan', text: 'budget ATK tinggal 15%' },
+      { t: 28000, sender: 'Admin', role: 'admin', text: 'upload dokumen vendor ke folder bersama' },
+      { t: 30000, sender: 'HRD', role: 'hrd', text: 'usul: jadwal kerja fleksibel hari Jumat' },
     ]
     const toolMessages = isOfficeSim
       ? defaultToolMessages.map((m, i) => {
@@ -1189,7 +1189,7 @@ const App: React.FC = () => {
       : defaultToolMessages
     toolMessages.forEach(({ t, sender, role, text }) => {
       timers.push(setTimeout(() => {
-        const cfg = AGENT_CONFIGS[role] ?? AGENT_CONFIGS['default']
+        const cfg = AGENT_CONFIGS[role] ?? AGENT_CONFIGS['default' ]
         addMsg(sender, role, cfg.color, text)
       }, t))
     })
@@ -1201,7 +1201,7 @@ const App: React.FC = () => {
 
     // 27s: Agent replies
     timers.push(setTimeout(() => {
-      const cfg = AGENT_CONFIGS['keuangan'] ?? AGENT_CONFIGS['default']
+      const cfg = AGENT_CONFIGS['keuangan' ] ?? AGENT_CONFIGS['default' ]
       addMsg('Keuangan', 'keuangan', cfg.color,
         isOfficeSim
           ? 'kritis — level parah ala Dwight. semua angka saya audit ulang sekarang'
@@ -1210,15 +1210,15 @@ const App: React.FC = () => {
 
     // 30s: Random chatter
     timers.push(setTimeout(() => {
-      const cfg = AGENT_CONFIGS['admin'] ?? AGENT_CONFIGS['default']
+      const cfg = AGENT_CONFIGS['admin' ] ?? AGENT_CONFIGS['default' ]
       addMsg('Admin', 'admin', cfg.color,
-        isOfficeSim ? 'beresin arsip? gampang — lebih gampang dari ngatur Dundies' : 'dokumen tinggal aku pindahin ke folder bersama')
+        isOfficeSim ? 'beresin arsip? gampang — lebih gampang dari ngatur Dundies' :  'dokumen tinggal aku pindahin ke folder bersama')
     }, 30000))
 
     timers.push(setTimeout(() => {
-      const cfg = AGENT_CONFIGS['hrd'] ?? AGENT_CONFIGS['default']
+      const cfg = AGENT_CONFIGS['hrd' ] ?? AGENT_CONFIGS['default' ]
       addMsg('HRD', 'hrd', cfg.color,
-        isOfficeSim ? 'approved. cabang Stamford, gas. boom. roasted.' : 'absensi tervalidasi, lanjut berikutnya')
+        isOfficeSim ? 'approved. cabang Stamford, gas. boom. roasted.' :  'absensi tervalidasi, lanjut berikutnya')
     }, 32000))
 
     // 33s: Antony checks status with a slash command
@@ -1237,7 +1237,7 @@ const App: React.FC = () => {
     // 38s: Pizza delivery event!
     timers.push(setTimeout(() => {
       addMsg('system', 'default', '#8b8d91',
-        officeSim0 ? '🥨 IT\'S PRETZEL DAY' : '🍕 Pizza sampai! Makan siang gratis!', true)
+        officeSim0 ? 'IT\'S PRETZEL DAY' :  'Pizza sampai! Makan siang gratis!', true)
       addMsg(bossCfg.title, BOSS_ROLE, bossCfg.color,
         officeSim0 ? "You don't understand. It's pretzel day." : 'Pizza di lobi!')
       // Move all agents to door
@@ -1262,15 +1262,15 @@ const App: React.FC = () => {
 
     // 45s: Agent chatter after pizza/pretzels
     timers.push(setTimeout(() => {
-      const cfg = AGENT_CONFIGS['keuangan'] ?? AGENT_CONFIGS['default']
+      const cfg = AGENT_CONFIGS['keuangan' ] ?? AGENT_CONFIGS['default' ]
       addMsg('Keuangan', 'keuangan', cfg.color,
-        officeSim0 ? 'all the toppings. Stanley has been waiting all year.' : 'nanas di pizza itu masalah serius')
+        officeSim0 ? 'all the toppings. Stanley has been waiting all year.' :  'nanas di pizza itu masalah serius')
     }, 46000))
 
     timers.push(setTimeout(() => {
-      const cfg = AGENT_CONFIGS['admin'] ?? AGENT_CONFIGS['default']
+      const cfg = AGENT_CONFIGS['admin' ] ?? AGENT_CONFIGS['default' ]
       addMsg('Admin', 'admin', cfg.color,
-        officeSim0 ? "that's what she said" : '😂')
+        officeSim0 ? "that's what she said" : '')
     }, 47500))
 
     // 48s: Security completes
@@ -1289,24 +1289,24 @@ const App: React.FC = () => {
       handleEvent({
         type: 'agent_completed',
         agentId: 'vid-staff',
-        result: officeSim0 ? '8 dokumen ditemukan — semua diarsipkan di folder B untuk "Beet".' : '8 dokumen ditemukan, semua sudah diarsipkan',
+        result: officeSim0 ? '8 dokumen ditemukan — semua diarsipkan di folder B untuk "Beet".' :  '8 dokumen ditemukan, semua sudah diarsipkan',
       })
     }, 52000))
 
     // 55s: Antony wraps up
     timers.push(setTimeout(() => {
-      setAutoTypeText(officeSim0 ? 'great work team — boom. roasted. 🥨' : 'kerja bagus tim! 🚀')
+      setAutoTypeText(officeSim0 ? 'great work team — boom. roasted.' : 'kerja bagus tim!')
     }, 55000))
 
     // 58s: Remaining agents complete
     timers.push(setTimeout(() => {
       handleEvent({ type: 'agent_completed', agentId: 'vid-hrd',
-        result: officeSim0 ? 'Semua absensi tervalidasi — approve-nya Jim.' : 'Semua absensi tervalidasi dan disetujui' })
+        result: officeSim0 ? 'Semua absensi tervalidasi — approve-nya Jim.' :  'Semua absensi tervalidasi dan disetujui' })
     }, 58000))
 
     timers.push(setTimeout(() => {
       handleEvent({ type: 'agent_completed', agentId: 'vid-admin',
-        result: officeSim0 ? 'Dokumen diunggah — Kevin ambil setengah buat chili-nya.' : 'Dokumen terunggah ke folder bersama' })
+        result: officeSim0 ? 'Dokumen diunggah — Kevin ambil setengah buat chili-nya.' :  'Dokumen terunggah ke folder bersama' })
     }, 60000))
 
     return () => timers.forEach(t => clearTimeout(t))
@@ -1464,7 +1464,7 @@ const App: React.FC = () => {
 
         // Random break trigger
         if (
-          updated.state === 'working' &&
+          updated.state === 'working'&&
           meta.arrivedAtDeskAt !== null &&
           !meta.onBreak &&
           COFFEE_SPOT !== null
@@ -1481,11 +1481,10 @@ const App: React.FC = () => {
               meta.onBreak = false
               meta.arrivedAtDeskAt = null
 
-              const cfg = AGENT_CONFIGS[updated.role] ?? AGENT_CONFIGS['default']
+              const cfg = AGENT_CONFIGS[updated.role] ?? AGENT_CONFIGS['default' ]
               const isBoss = updated.id === BOSS_ID
-              const breakMsg = useWater ? waterMessage() : (isBoss ? 'grabbing a Red Bull' : coffeeMessage())
-              const breakIcon = isBoss ? '🥫' : (useWater ? '💧' : '☕')
-              addMsg(updated.name, updated.role, cfg.color, `${breakIcon} ${breakMsg}`)
+              const breakMsg = useWater ? waterMessage() : (isBoss ? 'grabbing a Red Bull': coffeeMessage())
+              addMsg(updated.name, updated.role, cfg.color, breakMsg)
               if (!sfx.isMuted()) sfx.playCoffee()
 
               const breakTarget = { x: breakSpot.x, y: breakSpot.y }
@@ -1546,7 +1545,7 @@ const App: React.FC = () => {
       'printer-jam': { x: 83.8, y: 63 },
     }
 
-    const bossCfg = AGENT_CONFIGS[BOSS_ROLE] ?? AGENT_CONFIGS['default']
+    const bossCfg = AGENT_CONFIGS[BOSS_ROLE] ?? AGENT_CONFIGS['default' ]
 
     function fireEvent() {
       const event = pickEvent()
@@ -1587,7 +1586,7 @@ const App: React.FC = () => {
           const nonBoss = participants.filter(a => a.id !== BOSS_ID)
           if (nonBoss.length === 0) return
           const agent = nonBoss[Math.floor(Math.random() * nonBoss.length)]
-          const cfg = AGENT_CONFIGS[agent.role] ?? AGENT_CONFIGS['default']
+          const cfg = AGENT_CONFIGS[agent.role] ?? AGENT_CONFIGS['default' ]
           addMsg(agent.name, agent.role, cfg.color, text)
         }, 1200)
       }
@@ -1725,7 +1724,7 @@ const App: React.FC = () => {
 
   // Effective day phase (respects manual override)
   const effectivePhase: DayPhase = dayNightMode === 'auto' ? dayPhase
-    : dayNightMode === 'day' ? 'morning' : 'night'
+    : dayNightMode === 'day' ? 'morning' :  'night'
   const isNight = effectivePhase === 'night' || effectivePhase === 'dusk'
 
   const [volume, setVolume] = useState(sfx.getVolume())
@@ -1764,11 +1763,11 @@ const App: React.FC = () => {
         <button
           className="title-bar-daynight"
           onClick={() => setDayNightMode(prev =>
-            prev === 'auto' ? 'day' : prev === 'day' ? 'night' : 'auto'
+            prev === 'auto' ? 'day': prev === 'day' ? 'night' :  'auto'
           )}
           title={`Mode: ${dayNightMode}`}
         >
-          {dayNightMode === 'auto' ? 'AUTO' : dayNightMode === 'day' ? 'DAY' : 'NIGHT'}
+          {dayNightMode === 'auto' ? 'AUTO': dayNightMode === 'day' ? 'DAY' :  'NIGHT' }
         </button>
         <span className="title-bar-phase">{getPhaseLabel(effectivePhase)}</span>
       </div>
@@ -1776,7 +1775,7 @@ const App: React.FC = () => {
       <div className="app-body">
       <div className="office-view">
         <div
-          className={`room-container${flickering ? ' flickering' : ''}`}
+          className={`room-container${flickering ? 'flickering' :  '' }`}
           style={{
             aspectRatio: '4800/3584',
             width: '100%',
@@ -1788,7 +1787,7 @@ const App: React.FC = () => {
           <div
             key={`day-${theme}`}
             className="room-background"
-            style={{ backgroundImage: `url(${getRoomImage('day')})` }}
+            style={{ backgroundImage: `url(${getRoomImage('day')})`}}
           />
           <div
             key={`night-${theme}`}
@@ -1906,7 +1905,7 @@ const App: React.FC = () => {
         onToggleMute={handleToggleMute}
         onVolumeChange={handleVolumeChange}
         onSendMessage={(text) => {
-          const bossCfg = AGENT_CONFIGS[BOSS_ROLE] ?? AGENT_CONFIGS['default']
+          const bossCfg = AGENT_CONFIGS[BOSS_ROLE] ?? AGENT_CONFIGS['default' ]
           addMsg(bossCfg.title, BOSS_ROLE, bossCfg.color, text)
           setAutoTypeText(undefined)
           // Send to server so Claude can read it

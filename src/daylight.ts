@@ -64,17 +64,17 @@ export function getCurrentPhase(latitude = 51.5): DayPhase {
  */
 export function getPhaseLabel(phase: DayPhase): string {
   switch (phase) {
-    case 'night':     return '🌙 Night shift'
-    case 'dawn':      return '🌅 Dawn is breaking'
-    case 'morning':   return '☀️ Good morning'
-    case 'afternoon': return '☀️ Afternoon'
-    case 'evening':   return '🌆 Evening'
-    case 'dusk':      return '🌇 Sun is setting'
+    case 'night': return 'Shift malam'
+    case 'dawn': return 'Subuh'
+    case 'morning': return 'Selamat pagi'
+    case 'afternoon': return 'Siang'
+    case 'evening': return 'Sore'
+    case 'dusk': return 'Matahari terbenam'
   }
 }
 
 /**
- * Is it currently "dark" (should show night background)?
+ * Is it currently "dark"(should show night background)?
  */
 export function isDark(phase: DayPhase): boolean {
   return phase === 'night' || phase === 'dusk' || phase === 'dawn'

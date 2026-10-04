@@ -52,7 +52,7 @@ def split_image_pillow(input_path, name, output_dir):
         filename = f"{name}-1-{direction}.png"
         filepath = os.path.join(output_dir, filename)
         quadrant.save(filepath, 'PNG')
-        print(f"  ✓ {filepath} ({quadrant.size[0]}x{quadrant.size[1]})")
+        print(f" {filepath} ({quadrant.size[0]}x{quadrant.size[1]})")
 
 
 def split_image_sips(input_path, name, output_dir):
@@ -91,7 +91,7 @@ def split_image_sips(input_path, name, output_dir):
             filepath
         ], capture_output=True)
 
-        print(f"  ✓ {filepath}")
+        print(f" {filepath}")
 
 
 def main():
@@ -134,7 +134,7 @@ def main():
     print(f"\nDone! Now update src/config.ts:")
     print(f"  export const BOSS_CHAR = '{args.name}-1'")
     print(f"\nAnd update src/types.ts:")
-    print(f"  'boss': {{ color: '#ff4444', emoji: '👑', title: '{args.name}' }},")
+    print(f" 'boss': {{ color: '#ff4444', emoji: '', title: '{args.name}' }},")
     print()
 
 

@@ -22,7 +22,7 @@ type PlacementMode = 'furniture' | 'door' | 'spot' | 'entry' | 'floor' | 'waypoi
 type SpotType = 'desk' | 'meeting-seat' | 'lounge' | 'standing' | 'water' | 'coffee'
 
 type SpriteFacingDir = 'front-left' | 'front-right' | 'rear-left' | 'rear-right'
-const DIRECTIONS: SpriteFacingDir[] = ['front-left', 'front-right', 'rear-left', 'rear-right']
+const DIRECTIONS: SpriteFacingDir[] = ['front-left', 'front-right', 'rear-left', 'rear-right' ]
 
 interface PlacedItem {
   id: string
@@ -74,7 +74,7 @@ const PlacementHelper: React.FC = () => {
 
   // Waypoint editor state — loaded from rooms.ts on init
   const [waypoints, setWaypoints] = useState<EditableWaypoint[]>(() => {
-    const room = ROOMS['main-office']
+    const room = ROOMS['main-office' ]
     return (room.waypoints ?? []).map(wp => ({ ...wp, connections: [...wp.connections] }))
   })
   const [selectedWp, setSelectedWp] = useState<string | null>(null)
@@ -228,50 +228,50 @@ const PlacementHelper: React.FC = () => {
     const lines: string[] = []
 
     if (furniture.length) {
-      lines.push('    furniture: [')
+      lines.push('furniture: [')
       furniture.forEach(p => {
         lines.push(`      { id: '${p.id}', type: '${p.assetKey}', sprite: '${p.assetKey}', x: ${p.x}, y: ${p.y}, label: '${p.assetKey}' },`)
       })
-      lines.push('    ],')
+      lines.push(' ],')
     }
 
     if (doors.length) {
-      lines.push('    connections: [')
+      lines.push('connections: [')
       doors.forEach(p => {
         lines.push(`      { toRoom: 'TODO', position: { x: ${p.x}, y: ${p.y} }, label: '${p.label}' },`)
       })
-      lines.push('    ],')
+      lines.push(' ],')
     }
 
     if (spots.length) {
-      lines.push('    agentSpots: [')
+      lines.push('agentSpots: [')
       spots.forEach((p, i) => {
-        lines.push(`      { id: 'spot-${i + 1}', type: '${p.spotType}', x: ${p.x}, y: ${p.y}, facing: 'down', spriteFacing: '${p.spriteFacing ?? 'front-right'}' },`)
+        lines.push(`      { id: 'spot-${i + 1}', type: '${p.spotType}', x: ${p.x}, y: ${p.y}, facing: 'down', spriteFacing: '${p.spriteFacing ?? 'front-right' }' },`)
       })
-      lines.push('    ],')
+      lines.push(' ],')
     }
 
     if (entry) {
-      lines.push(`    entryPoint: { x: ${entry.x}, y: ${entry.y} },`)
+      lines.push(`entryPoint: { x: ${entry.x}, y: ${entry.y} },`)
     }
 
     const floor = placed.filter(p => p.mode === 'floor')
     if (floor.length >= 3) {
-      lines.push('    walkableArea: [')
+      lines.push('walkableArea: [')
       floor.forEach(p => {
         lines.push(`      { x: ${p.x}, y: ${p.y} },`)
       })
-      lines.push('    ],')
+      lines.push(' ],')
     }
 
     if (waypoints.length > 0) {
-      lines.push('    waypoints: [')
+      lines.push('waypoints: [')
       waypoints.forEach(wp => {
         const conns = wp.connections.map(c => `'${c}'`).join(', ')
         const pad = ' '.repeat(Math.max(0, 18 - wp.id.length))
         lines.push(`      { id: '${wp.id}',${pad}x: ${wp.x}, y: ${wp.y}, connections: [${conns}] },`)
       })
-      lines.push('    ],')
+      lines.push(' ],')
     }
 
     return lines.join('\n')
@@ -329,13 +329,13 @@ const PlacementHelper: React.FC = () => {
           <div style={{ width: 1, height: 16, background: '#333', margin: '0 4px' }} />
 
           {/* Mode buttons */}
-          {(['furniture', 'door', 'spot', 'entry', 'floor', 'waypoint'] as PlacementMode[]).map(m => (
+          {(['furniture', 'door', 'spot', 'entry', 'floor', 'waypoint' ] as PlacementMode[]).map(m => (
             <button
               key={m}
               onClick={() => setMode(m)}
               style={{
-                background: mode === m ? '#2bac76' : '#222',
-                color: mode === m ? '#fff' : '#888',
+                background: mode === m ? '#2bac76' :  '#222',
+                color: mode === m ? '#fff' :  '#888',
                 border: 'none',
                 padding: '3px 8px',
                 borderRadius: 3,
@@ -344,7 +344,7 @@ const PlacementHelper: React.FC = () => {
                 textTransform: 'uppercase',
               }}
             >
-              {m === 'furniture' ? 'Furniture' : m === 'door' ? 'Door' : m === 'spot' ? 'Agent Spot' : m === 'entry' ? 'Entry' : m === 'waypoint' ? 'Waypoint' : 'Floor'}
+              {m === 'furniture' ? 'Furniture': m === 'door' ? 'Door': m === 'spot' ? 'Agent Spot': m === 'entry' ? 'Entry': m === 'waypoint' ? 'Waypoint' :  'Floor' }
             </button>
           ))}
 
@@ -377,7 +377,7 @@ const PlacementHelper: React.FC = () => {
           {mode === 'waypoint' && (
             <span style={{ color: '#00ff88', fontSize: 9, background: '#1a2e1a', padding: '2px 6px', borderRadius: 3 }}>
               {waypoints.length} waypoints
-              {selectedWp && ` • Selected: ${selectedWp.replace('W-', '')}`}
+              {selectedWp && `• Selected: ${selectedWp.replace('W-', '')}`}
             </span>
           )}
 
@@ -387,7 +387,7 @@ const PlacementHelper: React.FC = () => {
                 ? 'Klik waypoint untuk menyambung • Klik area kosong untuk letakkan+rangkai • Shift+seret untuk pindah • Klik kanan untuk hapus • Klik yang dipilih untuk batal'
                 : 'Klik area kosong untuk letakkan • Klik waypoint untuk pilih • Klik kanan untuk hapus'
               : canPlace
-                ? `Klik untuk letakkan ${mode}${mode === 'furniture' ? `: ${selectedAsset}` : ''}`
+                ? `Klik untuk letakkan ${mode}${mode === 'furniture' ? `: ${selectedAsset}`: '' }`
                 : 'Select a sprite from palette'
             }
           </span>
@@ -396,12 +396,12 @@ const PlacementHelper: React.FC = () => {
             onClick={() => setShowJson(!showJson)}
             style={{ background: '#2bac76', color: '#fff', border: 'none', padding: '3px 8px', borderRadius: 3, cursor: 'pointer', fontSize: 10 }}
           >
-            {showJson ? 'Hide' : 'Export'}
+            {showJson ? 'Hide' :  'Export' }
           </button>
           <button
             onClick={() => setHideCharacters(!hideCharacters)}
             style={{
-              background: hideCharacters ? '#e74c3c' : '#222',
+              background: hideCharacters ? '#e74c3c' :  '#222',
               color: '#fff',
               border: 'none',
               padding: '3px 8px',
@@ -410,12 +410,12 @@ const PlacementHelper: React.FC = () => {
               fontSize: 10,
             }}
           >
-            {hideCharacters ? 'Show People' : 'Hide People'}
+            {hideCharacters ? 'Show People' :  'Hide People' }
           </button>
           <button
             onClick={undo}
             disabled={history.length <= 1}
-            style={{ background: history.length > 1 ? '#555' : '#333', color: '#fff', border: 'none', padding: '3px 8px', borderRadius: 3, cursor: history.length > 1 ? 'pointer' : 'default', fontSize: 10, opacity: history.length > 1 ? 1 : 0.4 }}
+            style={{ background: history.length > 1 ? '#555' :  '#333', color: '#fff', border: 'none', padding: '3px 8px', borderRadius: 3, cursor: history.length > 1 ? 'pointer' :  'default', fontSize: 10, opacity: history.length > 1 ? 1 : 0.4 }}
           >
             Undo
           </button>
@@ -426,7 +426,7 @@ const PlacementHelper: React.FC = () => {
             }}
             style={{ background: '#e74c3c', color: '#fff', border: 'none', padding: '3px 8px', borderRadius: 3, cursor: 'pointer', fontSize: 10 }}
           >
-            Clear{mode === 'waypoint' ? ' All Waypoints' : ''}
+            Clear{mode === 'waypoint' ? 'All Waypoints' :  '' }
           </button>
         </div>
 
@@ -447,7 +447,7 @@ const PlacementHelper: React.FC = () => {
               aspectRatio: '4800 / 3584',
               maxWidth: '100%',
               maxHeight: '100%',
-              cursor: canPlace ? 'crosshair' : 'default',
+              cursor: canPlace ? 'crosshair' :  'default',
             }}
           >
             <img
@@ -460,7 +460,7 @@ const PlacementHelper: React.FC = () => {
 
           {/* Existing room data overlay (read-only from rooms.ts) */}
           {(() => {
-            const room = ROOMS['main-office']
+            const room = ROOMS['main-office' ]
             return (
               <>
                 {/* Furniture from rooms.ts */}
@@ -491,7 +491,7 @@ const PlacementHelper: React.FC = () => {
                 })}
                 {/* Agent spots from rooms.ts — clickable characters with rotate arrows */}
                 {!hideCharacters && (() => {
-                  const charNames = ['Me-1', 'dev-1', 'employee-1', 'dev-2', 'employee-2', 'security-audit-1', 'employee-3', 'Frontend-dev-1', 'explore-1', 'dev-1', 'employee-1', 'dev-2', 'employee-2', 'employee-3', 'Frontend-dev-1', 'security-audit-1']
+                  const charNames = ['Me-1', 'dev-1', 'employee-1', 'dev-2', 'employee-2', 'security-audit-1', 'employee-3', 'Frontend-dev-1', 'explore-1', 'dev-1', 'employee-1', 'dev-2', 'employee-2', 'employee-3', 'Frontend-dev-1', 'security-audit-1' ]
                   const spotColors: Record<string, string> = { desk: '#3498db', standing: '#2ecc71', water: '#00bcd4', coffee: '#795548', 'meeting-seat': '#9b59b6', lounge: '#e67e22', filing: '#ff9800', printer: '#607d8b', door: '#e74c3c' }
                   return room.agentSpots.map((spot, i) => {
                     const color = spotColors[spot.type] ?? '#888'
@@ -666,8 +666,8 @@ const PlacementHelper: React.FC = () => {
                       <line
                         key={`wl-${wp.id}-${connId}`}
                         x1={wp.x} y1={wp.y} x2={target.x} y2={target.y}
-                        stroke={isSelected ? '#00ff88' : '#ff9800'}
-                        strokeWidth={isSelected ? '0.5' : '0.3'}
+                        stroke={isSelected ? '#00ff88' :  '#ff9800' }
+                        strokeWidth={isSelected ? '0.5' :  '0.3' }
                         opacity={isSelected ? 1 : 0.6}
                       />
                     )
@@ -766,15 +766,15 @@ const PlacementHelper: React.FC = () => {
                       width: isSelected ? 28 : 22,
                       height: isSelected ? 28 : 22,
                       borderRadius: '50%',
-                      background: isSelected ? '#00ff88' : isConnectedToSelected ? '#66ffaa' : '#ff9800',
-                      border: `2px solid ${isSelected ? '#fff' : 'transparent'}`,
+                      background: isSelected ? '#00ff88': isConnectedToSelected ? '#66ffaa' :  '#ff9800',
+                      border: `2px solid ${isSelected ? '#fff' :  'transparent' }`,
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
                       fontSize: 9,
                       fontWeight: 'bold',
-                      color: isSelected ? '#000' : '#fff',
-                      boxShadow: isSelected ? '0 0 12px #00ff88' : `0 0 6px ${isConnectedToSelected ? '#66ffaa' : '#ff9800'}`,
+                      color: isSelected ? '#000' :  '#fff',
+                      boxShadow: isSelected ? '0 0 12px #00ff88' : `0 0 6px ${isConnectedToSelected ? '#66ffaa' :  '#ff9800' }`,
                       transition: 'all 0.15s',
                     }}>
                       W
@@ -785,7 +785,7 @@ const PlacementHelper: React.FC = () => {
                       left: '50%',
                       transform: 'translateX(-50%)',
                       fontSize: 8,
-                      color: isSelected ? '#00ff88' : '#ff9800',
+                      color: isSelected ? '#00ff88' :  '#ff9800',
                       whiteSpace: 'nowrap',
                       textShadow: '0 1px 3px #000',
                       fontWeight: 'bold',
@@ -817,7 +817,7 @@ const PlacementHelper: React.FC = () => {
                     transform: 'translate(-50%, -100%)',
                     cursor: 'grab',
                     zIndex: Math.round(item.y) + 10,
-                    outline: dragging === item.id ? '2px solid #2bac76' : 'none',
+                    outline: dragging === item.id ? '2px solid #2bac76' :  'none',
                   }}
                   title={`${item.assetKey} (${item.x}, ${item.y}) — klik kanan untuk hapus`}
                 >
@@ -852,10 +852,10 @@ const PlacementHelper: React.FC = () => {
             const colors: Record<PlacementMode, string> = {
               furniture: '#2bac76',
               door: '#e74c3c',
-              spot: SPOT_COLORS[item.spotType ?? 'desk'],
+              spot: SPOT_COLORS[item.spotType ?? 'desk' ],
               entry: '#f39c12',
               floor: '#2ecc71',
-              waypoint: connectingFrom === item.id ? '#ff4444' : '#00ff88',
+              waypoint: connectingFrom === item.id ? '#ff4444' :  '#00ff88',
             }
             const icons: Record<PlacementMode, string> = {
               furniture: '',
@@ -904,12 +904,12 @@ const PlacementHelper: React.FC = () => {
                   left: `${item.x}%`,
                   top: `${item.y}%`,
                   transform: 'translate(-50%, -50%)',
-                  cursor: item.mode === 'waypoint' && mode === 'waypoint' ? 'pointer' : 'grab',
+                  cursor: item.mode === 'waypoint' && mode === 'waypoint' ? 'pointer' :  'grab',
                   zIndex: 100,
                 }}
                 title={item.mode === 'waypoint'
                   ? `${item.label} (${item.x}, ${item.y}) — klik untuk menyambung, klik kanan untuk hapus`
-                  : `${item.mode} (${item.x}, ${item.y})${item.label ? ` — ${item.label}` : ''} — klik kanan untuk hapus`
+                  : `${item.mode} (${item.x}, ${item.y})${item.label ? `— ${item.label}`: '' } — klik kanan untuk hapus`
                 }
               >
                 <div style={{
@@ -939,7 +939,7 @@ const PlacementHelper: React.FC = () => {
                   whiteSpace: 'nowrap',
                   textShadow: '0 1px 2px #000',
                 }}>
-                  {item.label ?? item.spotType ?? ''} ({item.x}, {item.y})
+                  {item.label ?? item.spotType ?? '' } ({item.x}, {item.y})
                 </div>
               </div>
             )
@@ -961,7 +961,7 @@ const PlacementHelper: React.FC = () => {
               onClick={() => navigator.clipboard.writeText(generateJson())}
               title="Klik untuk salin"
             >
-              {generateJson() || '// Nothing placed yet'}
+              {generateJson() || ' // Nothing placed yet' }
             </pre>
           </div>
         )}
@@ -1031,8 +1031,8 @@ const PlacementHelper: React.FC = () => {
               padding: '4px 6px',
               borderRadius: 4,
               cursor: 'pointer',
-              background: selectedAsset === key && mode === 'furniture' ? 'rgba(43, 172, 118, 0.15)' : 'transparent',
-              border: selectedAsset === key && mode === 'furniture' ? '1px solid rgba(43, 172, 118, 0.3)' : '1px solid transparent',
+              background: selectedAsset === key && mode === 'furniture' ? 'rgba(43, 172, 118, 0.15)' :  'transparent',
+              border: selectedAsset === key && mode === 'furniture' ? '1px solid rgba(43, 172, 118, 0.3)' :  '1px solid transparent',
               opacity: mode === 'furniture' ? 1 : 0.5,
             }}
           >
@@ -1047,7 +1047,7 @@ const PlacementHelper: React.FC = () => {
               }}
               draggable={false}
             />
-            <span style={{ fontSize: 8, color: selectedAsset === key ? '#2bac76' : '#8b8d91' }}>
+            <span style={{ fontSize: 8, color: selectedAsset === key ? '#2bac76' :  '#8b8d91' }}>
               {key}
             </span>
           </div>

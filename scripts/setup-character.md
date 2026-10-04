@@ -50,7 +50,7 @@ export const BOSS_CHAR = 'YourName-1'
 Edit `src/types.ts` and update:
 
 ```typescript
-'boss': { color: '#ff4444', emoji: '👑', title: 'YourName' },
+'boss': { color: '#ff4444', icon: 'crown', title: 'YourName' },
 ```
 
 ## Step 5: Restart the Office

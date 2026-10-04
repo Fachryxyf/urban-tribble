@@ -25,16 +25,16 @@ const db = new Database(DB_PATH)
 db.pragma('journal_mode = WAL')
 
 db.exec(
-  'CREATE TABLE IF NOT EXISTS messages (' +
-  '  id         INTEGER PRIMARY KEY AUTOINCREMENT,' +
-  '  sender     TEXT    NOT NULL,' +
-  '  role       TEXT    NOT NULL DEFAULT \'default\',' +
-  '  text       TEXT    NOT NULL,' +
-  '  timestamp  INTEGER NOT NULL,' +
-  '  is_system  INTEGER NOT NULL DEFAULT 0,' +
-  '  reactions  TEXT    NOT NULL DEFAULT \'[]\',' +
-  '  thread_id  INTEGER,' +
-  '  seen       INTEGER NOT NULL DEFAULT 0' +
+  'CREATE TABLE IF NOT EXISTS messages ('+
+  'id         INTEGER PRIMARY KEY AUTOINCREMENT,'+
+  'sender     TEXT    NOT NULL,'+
+  'role       TEXT    NOT NULL DEFAULT \'default\','+
+  'text       TEXT    NOT NULL,'+
+  'timestamp  INTEGER NOT NULL,'+
+  'is_system  INTEGER NOT NULL DEFAULT 0,'+
+  'reactions  TEXT    NOT NULL DEFAULT \'[]\','+
+  'thread_id  INTEGER,'+
+  'seen       INTEGER NOT NULL DEFAULT 0'+
   ')'
 )
 
@@ -43,19 +43,19 @@ db.exec(
 // ---------------------------------------------------------------------------
 
 const stmtInsert = db.prepare(
-  'INSERT INTO messages (sender, role, text, timestamp, is_system, thread_id) ' +
+  'INSERT INTO messages (sender, role, text, timestamp, is_system, thread_id) '+
   'VALUES (@sender, @role, @text, @timestamp, @isSystem, @threadId)'
 )
 
 const stmtGetAll = db.prepare(
-  'SELECT * FROM (SELECT * FROM messages ORDER BY timestamp DESC, id DESC LIMIT @limit) ' +
+  'SELECT * FROM (SELECT * FROM messages ORDER BY timestamp DESC, id DESC LIMIT @limit) '+
   'ORDER BY timestamp ASC, id ASC'
 )
 
 const stmtGetSince = db.prepare(
-  'SELECT * FROM messages ' +
-  'WHERE timestamp > @since ' +
-  'ORDER BY timestamp ASC, id ASC ' +
+  'SELECT * FROM messages '+
+  'WHERE timestamp > @since '+
+  'ORDER BY timestamp ASC, id ASC '+
   'LIMIT @limit'
 )
 
@@ -72,8 +72,8 @@ const stmtSetReactions = db.prepare(
 )
 
 const stmtGetThread = db.prepare(
-  'SELECT * FROM messages ' +
-  'WHERE thread_id = @threadId ' +
+  'SELECT * FROM messages '+
+  'WHERE thread_id = @threadId '+
   'ORDER BY timestamp ASC, id ASC'
 )
 

@@ -85,7 +85,7 @@ export function getAssetPath(key: string): string | null {
 }
 
 // Helper: get all assets by category
-export function getAssetsByCategory(category: SpriteAsset['category']): Record<string, SpriteAsset> {
+export function getAssetsByCategory(category: SpriteAsset['category' ]): Record<string, SpriteAsset> {
   return Object.fromEntries(
     Object.entries(ASSETS).filter(([, a]) => a.category === category)
   )

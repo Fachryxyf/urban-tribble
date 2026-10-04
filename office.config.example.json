@@ -3,7 +3,7 @@
     "name": "NamaAnda",
     "sprite": "Me-1",
     "color": "#ff4444",
-    "emoji": "crown"
+    "icon": "crown"
   },
   "watch_folder": "/Users/Anda/Documents/FolderKantor",
   "poll_interval": 4

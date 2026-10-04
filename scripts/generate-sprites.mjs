@@ -22,18 +22,18 @@ const CHARACTERS = [
 
 async function checkBalance() {
   const bal = await client.getBalance()
-  console.log(`💰 Balance: ${bal.balance} ${bal.currency}`)
+  console.log(`Balance: ${bal.balance} ${bal.currency}`)
   return bal.balance
 }
 
 async function generateCharacter(char) {
   const outPath = join(SPRITES_DIR, `${char.id}.png`)
   if (existsSync(outPath)) {
-    console.log(`⏭️  ${char.id} already exists, skipping`)
+    console.log(`⏭ ${char.id} already exists, skipping`)
     return outPath
   }
 
-  console.log(`🎨 Generating ${char.id}...`)
+  console.log(`Generating ${char.id}...`)
 
   const response = await client.generateImagePixflux({
     description: `tiny pixel art top-down view ${char.desc}, 16-bit style game character, facing down, simple clean pixel art style, office worker`,
@@ -47,24 +47,24 @@ async function generateCharacter(char) {
   })
 
   await response.image.saveToFile(outPath)
-  console.log(`✅ Saved ${char.id}.png`)
+  console.log(`Saved ${char.id}.png`)
   return outPath
 }
 
 async function generateWalkAnimation(char) {
   const outPath = join(SPRITES_DIR, `${char.id}-walk.png`)
   if (existsSync(outPath)) {
-    console.log(`⏭️  ${char.id}-walk already exists, skipping`)
+    console.log(`⏭ ${char.id}-walk already exists, skipping`)
     return
   }
 
   const refPath = join(SPRITES_DIR, `${char.id}.png`)
   if (!existsSync(refPath)) {
-    console.log(`❌ No base sprite for ${char.id}, skipping walk animation`)
+    console.log(`No base sprite for ${char.id}, skipping walk animation`)
     return
   }
 
-  console.log(`🚶 Generating walk animation for ${char.id}...`)
+  console.log(`Generating walk animation for ${char.id}...`)
 
   const refImage = await Base64Image.fromFile(refPath)
 
@@ -83,21 +83,21 @@ async function generateWalkAnimation(char) {
       const framePath = join(SPRITES_DIR, `${char.id}-walk-${i}.png`)
       await response.images[i].saveToFile(framePath)
     }
-    console.log(`✅ Saved ${char.id} walk frames (${response.images.length} frames)`)
+    console.log(`Saved ${char.id} walk frames (${response.images.length} frames)`)
   } else if (response.image) {
     await response.image.saveToFile(outPath)
-    console.log(`✅ Saved ${char.id}-walk.png`)
+    console.log(`Saved ${char.id}-walk.png`)
   }
 }
 
 async function main() {
-  console.log('🏢 Urban Tribble Sprite Generator')
+  console.log('Urban Tribble Sprite Generator')
   console.log('=================================\n')
 
   const balance = await checkBalance()
 
   // Phase 1: Generate base character sprites (8 credits)
-  console.log('\n📌 Phase 1: Base characters\n')
+  console.log('\n Phase 1: Base characters\n')
   for (const char of CHARACTERS) {
     await generateCharacter(char)
   }
@@ -108,20 +108,20 @@ async function main() {
   // Phase 2: Generate walk animations for key characters
   // Only if we have enough credits (each animation ~1 credit)
   if (afterBase >= CHARACTERS.length) {
-    console.log('\n📌 Phase 2: Walk animations\n')
+    console.log('\n Phase 2: Walk animations\n')
     for (const char of CHARACTERS) {
       await generateWalkAnimation(char)
     }
   } else {
-    console.log(`\n⚠️  ${afterBase} credits remaining - skipping walk animations`)
+    console.log(`\n ${afterBase} credits remaining - skipping walk animations`)
     console.log('Run this script again later to generate them')
   }
 
   const finalBalance = await checkBalance()
-  console.log(`\n🏁 Done! ${finalBalance} credits remaining`)
+  console.log(`\n Done! ${finalBalance} credits remaining`)
 }
 
 main().catch(err => {
-  console.error('❌ Error:', err.message)
+  console.error('Error:', err.message)
   process.exit(1)
 })

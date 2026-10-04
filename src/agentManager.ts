@@ -247,7 +247,7 @@ export function getEffect(
   switch (state) {
     case 'working': {
       // Ultra-think = energy drink mode — check both statusText and task
-      const text = `${statusText ?? ''} ${task ?? ''}`.toLowerCase()
+      const text = `${statusText ?? '' } ${task ?? '' }`.toLowerCase()
       if (text.includes('ultra') || text.includes('deep analysis') || text.includes('ultra-think')) {
         return pickEnergyDrink(agentId ?? 'default')
       }
@@ -277,7 +277,7 @@ export function getEffect(
     case 'completed':
       return '/sprites/effects/thumb-up.png'
     case 'idle':
-      return idleDurationMs > 30_000 ? '/sprites/effects/sleeping.png' : null
+      return idleDurationMs > 30_000 ? '/sprites/effects/sleeping.png': null
     default:
       return null
   }
@@ -373,8 +373,8 @@ export function createAgent(partial: {
   task?: string
   spot: AgentSpot
 }): Agent {
-  const cfg = AGENT_CONFIGS[partial.role] ?? AGENT_CONFIGS['default']
-  const entry = ROOMS['main-office'].entryPoint
+  const cfg = AGENT_CONFIGS[partial.role] ?? AGENT_CONFIGS['default' ]
+  const entry = ROOMS['main-office' ].entryPoint
 
   return {
     id: partial.id,
@@ -392,7 +392,7 @@ export function createAgent(partial: {
     task: partial.task,
     statusText: spawnMessage(),
     color: cfg.color,
-    emoji: cfg.emoji,
+    icon: cfg.icon,
     hiredAt: Date.now(),
   }
 }

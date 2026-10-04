@@ -18,7 +18,7 @@ const SpeechBubble: React.FC<SpeechBubbleProps> = ({ text, isManager = false, du
   if (!visible) return null
 
   return (
-    <div className={`speech-bubble${isManager ? ' manager-bubble' : ''}`}>
+    <div className={`speech-bubble${isManager ? 'manager-bubble' :  '' }`}>
       {text}
     </div>
   )

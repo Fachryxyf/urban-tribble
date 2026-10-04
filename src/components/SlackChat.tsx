@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react'
 import { ROLE_TO_CHAR } from '../config'
 import { getSpritePath, useTheme, toggleTheme, getTheme, themedDisplayName } from '../theme'
+import Icon from './Icon'
 
 function getAvatarSrc(role: string, agentId?: string): string {
   const charBase = ROLE_TO_CHAR[role] ?? 'employee-3'
@@ -10,6 +11,14 @@ function getAvatarSrc(role: string, agentId?: string): string {
 
 // Proactive message detection: agent announcements about starting/completing work
 const PROACTIVE_PATTERN = /\b(starting|started|done|finished|completed|ready|working on|picking up|taking over|mulai|selesai|sedang|siap|dikerjakan|tuntas)\b/i
+
+/** Render satu chip reaksi: ikon SVG bila nama dikenal, fallback ke teks lama */
+const ReactionChip: React.FC<{ name: string }> = ({ name }) => {
+  const known = ['like', 'dislike', 'smile', 'party', 'angry', 'fire', 'star',
+    'skull', 'rocket', 'heart', 'eyes', 'sweat', 'think', 'laugh', 'bolt', 'check' ]
+  if (known.includes(name)) return <Icon name={name} size={13} />
+  return <span>{name}</span>
+}
 
 export interface ChatMessage {
   id: number
@@ -23,7 +32,8 @@ export interface ChatMessage {
   reactions?: string[]
 }
 
-const EMOJI_PICKER = ['👍', '👎', '😊', '🎉', '😡', '🔥', '💯']
+// Reaksi pakai nama ikon (SVG) — bukan emoji
+const REACTION_ICONS = ['like', 'dislike', 'smile', 'party', 'angry', 'fire', 'star' ]
 
 interface SlackChatProps {
   messages: ChatMessage[]
@@ -135,20 +145,20 @@ const SlackChat: React.FC<SlackChatProps> = ({ messages, muted, volume, onToggle
         <div className="slack-channel-icon">#</div>
         <span className="slack-channel-name">kantor-umum</span>
         <div className="slack-header-right">
-          <div className="slack-online-dot" />
+          <div className="slack-online-dot"/>
           <span className="slack-online-count">{onlineCount}</span>
           <div
-            className={`slack-cron-toggle ${cronPaused ? 'paused' : 'active'}`}
+            className={`slack-cron-toggle ${cronPaused ? 'paused' :  'active' }`}
             onClick={toggleCron}
-            title={cronPaused ? 'Monitor chat dijeda — klik untuk lanjut' : 'Monitor chat aktif — klik untuk jeda'}
+            title={cronPaused ? 'Monitor chat dijeda — klik untuk lanjut' :  'Monitor chat aktif — klik untuk jeda' }
           >
             <div className="slack-cron-track">
-              <div className="slack-cron-thumb" />
+              <div className="slack-cron-thumb"/>
             </div>
-            <span className="slack-cron-label">{cronPaused ? 'AI Mati' : 'AI Hidup'}</span>
+            <span className="slack-cron-label">{cronPaused ? 'AI Mati' :  'AI Hidup' }</span>
           </div>
           <button className="slack-mute-btn" onClick={onToggleMute}>
-            {muted ? '🔇' : volume < 0.4 ? '🔈' : '🔊'}
+            {muted ? <Icon name="volumeMute" size={15} /> : volume < 0.4 ? <Icon name="volumeLow" size={15} /> : <Icon name="volumeHigh" size={15} />}
           </button>
           <input
             type="range"
@@ -168,11 +178,11 @@ const SlackChat: React.FC<SlackChatProps> = ({ messages, muted, volume, onToggle
           return (
             <React.Fragment key={msg.id}>
               <div
-                className={`slack-msg${msg.isSystem ? ' slack-msg-system' : ''}${isProactive ? ' slack-msg-proactive' : ''}`}
+                className={`slack-msg${msg.isSystem ? 'slack-msg-system' :  '' }${isProactive ? 'slack-msg-proactive' :  '' }`}
                 onDoubleClick={() => !msg.isSystem && setEmojiPickerMsgId(prev => prev === msg.id ? null : msg.id)}
               >
                 {!msg.isSystem && (
-                  <div className="slack-avatar" style={{ border: `2px solid ${msg.senderColor}`, boxShadow: `0 0 6px ${msg.senderColor}40` }}>
+                  <div className="slack-avatar" style={{ border: `2px solid ${msg.senderColor}`, boxShadow: `0 0 6px ${msg.senderColor}40`}}>
                     <img
                       src={getAvatarSrc(msg.senderSprite)}
                       alt={msg.sender}
@@ -196,7 +206,7 @@ const SlackChat: React.FC<SlackChatProps> = ({ messages, muted, volume, onToggle
                       <span className="slack-time">{msg.timestamp}</span>
                     </div>
                   )}
-                  <div className={`slack-msg-text${msg.isSystem ? ' slack-system-text' : ''}`}>
+                  <div className={`slack-msg-text${msg.isSystem ? 'slack-system-text' :  '' }`}>
                     {msg.text}
                   </div>
                   {msg.reactions && msg.reactions.length > 0 && (
@@ -207,18 +217,21 @@ const SlackChat: React.FC<SlackChatProps> = ({ messages, muted, volume, onToggle
                           className="slack-reaction"
                           onClick={() => handleReaction(msg, r)}
                           title="Klik untuk hapus"
-                        >{r}</span>
+                        >
+                          <ReactionChip name={r} />
+                        </span>
                       ))}
                     </div>
                   )}
                   {emojiPickerMsgId === msg.id && (
                     <div className="slack-emoji-picker" ref={pickerRef}>
-                      {EMOJI_PICKER.map(emoji => (
+                      {REACTION_ICONS.map(name => (
                         <button
-                          key={emoji}
-                          className={`slack-emoji-btn${msg.reactions?.includes(emoji) ? ' active' : ''}`}
-                          onClick={() => handleReaction(msg, emoji)}
-                        >{emoji}</button>
+                          key={name}
+                          className={`slack-emoji-btn${msg.reactions?.includes(name) ? 'active' :  '' }`}
+                          onClick={() => handleReaction(msg, name)}
+                          title={name}
+                        ><Icon name={name} size={15} /></button>
                       ))}
                     </div>
                   )}
@@ -227,7 +240,7 @@ const SlackChat: React.FC<SlackChatProps> = ({ messages, muted, volume, onToggle
               {lastSeenId != null && msg.id === lastSeenId && (
                 <div className="slack-seen-row">
                   <span className="slack-seen-label">Dilihat</span>
-                  <img src={getAvatarSrc('assistant')} className="slack-seen-avatar" alt="seen" />
+                  <img src={getAvatarSrc('assistant')} className="slack-seen-avatar" alt="seen"/>
                 </div>
               )}
             </React.Fragment>
@@ -236,7 +249,7 @@ const SlackChat: React.FC<SlackChatProps> = ({ messages, muted, volume, onToggle
         {typingUser && (
           <div className="slack-msg slack-typing-row">
             <div className="slack-avatar" style={{ border: '2px solid #cc785c', boxShadow: '0 0 6px #cc785c40' }}>
-              <img src={getAvatarSrc('assistant')} alt="typing" className="slack-avatar-img" />
+              <img src={getAvatarSrc('assistant')} alt="typing" className="slack-avatar-img"/>
             </div>
             <div className="slack-msg-content">
               <div className="slack-typing-label">{typingUser} sedang mengetik</div>
@@ -278,7 +291,7 @@ const SlackChat: React.FC<SlackChatProps> = ({ messages, muted, volume, onToggle
                 if (trimmed === '/the-office' || trimmed === '/theoffice') {
                   toggleTheme()
                   const nowOn = getTheme() === 'office'
-                  onSendMessage?.(nowOn ? '🧻 Mode kantor: AKTIF. Selamat datang di Urban Tribble Office.' : '🔁 Tema kantor: NONAKTIF')
+                  onSendMessage?.(nowOn ? 'Mode kantor: AKTIF. Selamat datang di Urban Tribble Office.' :  'Tema kantor: NONAKTIF')
                 } else {
                   onSendMessage?.(trimmed)
                 }
