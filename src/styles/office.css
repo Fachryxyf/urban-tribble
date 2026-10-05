@@ -1413,3 +1413,24 @@
 }
 .brief-submit:hover { background: rgba(52, 152, 219, 0.26); }
 .brief-submit:disabled { opacity: 0.55; cursor: default; }
+
+
+/* ===== NAMA STAF DI BAWAH SPRITE ===== */
+.char-name {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 1px;
+  font-size: 7.5px;
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 0.4px;
+  white-space: nowrap;
+  padding: 1px 4px;
+  border-radius: 2px;
+  background: rgba(8, 8, 12, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  text-shadow: 0 1px 0 #000;
+  pointer-events: none;
+  z-index: 6;
+}

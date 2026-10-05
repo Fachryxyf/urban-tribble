@@ -162,6 +162,8 @@ const Character: React.FC<CharacterProps> = ({ agent, idleDurationMs = 0, zIndex
           draggable={false}
         />
       </div>
+
+      <div className="char-name" style={{ color: agent.color }}>{agent.name}</div>
     </div>
   )
 }
