@@ -52,13 +52,13 @@ import { BOSS_NAME, BOSS_COLOR, BOSS_ICON } from './config'
 export const AGENT_CONFIGS: Record<string, { color: string; icon: string; title: string }> = {
   // Bos — dikonfigurasi via office.config.json
   'boss':                  { color: BOSS_COLOR, icon: BOSS_ICON, title: BOSS_NAME },
-  // Divisi kantor
-  'keuangan': { color: '#27ae60', icon: 'wallet', title: 'Keuangan' },
-  'hrd': { color: '#8e44ad', icon: 'users', title: 'HRD' },
-  'admin': { color: '#2980b9', icon: 'folder', title: 'Admin' },
-  'sekretaris': { color: '#e91e63', icon: 'calendar', title: 'Sekretaris' },
-  'logistik': { color: '#e67e22', icon: 'box', title: 'Logistik' },
-  'pemasaran': { color: '#1abc9c', icon: 'megaphone', title: 'Pemasaran' },
+  // Tim Red Team — 6 role analis internal
+  'ketua': { color: '#3498db', icon: 'clipboard', title: 'Ketua Tim' },
+  'pengacara': { color: '#e74c3c', icon: 'bolt', title: 'Pengacara Bantah' },
+  'risiko': { color: '#f39c12', icon: 'shield', title: 'Analis Risiko' },
+  'fakta': { color: '#00bcd4', icon: 'search', title: 'Penyelidik Fakta' },
+  'ekonom': { color: '#27ae60', icon: 'chart', title: 'Ekonom' },
+  'penulis': { color: '#9b59b6', icon: 'doc', title: 'Penulis Memo' },
   'staff': { color: '#78909c', icon: 'archive', title: 'Staff' },
   // Asisten kantor (balasan chat AI)
   'assistant': { color: '#cc785c', icon: 'robot', title: 'Asisten' },

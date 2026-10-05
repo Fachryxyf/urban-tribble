@@ -21,8 +21,18 @@ except Exception:
 
 if [ -n "$WATCH_DIR" ] && [ -d "$WATCH_DIR" ]; then
     echo "- Folder kerja: $WATCH_DIR"
-    FILES=$(ls -1 "$WATCH_DIR" 2>/dev/null | head -8 | sed 's/^/- Berkas: /')
-    [ -n "$FILES" ] && echo "$FILES"
+    if [ -d "$WATCH_DIR/briefs" ]; then
+        B=$(ls -1 "$WATCH_DIR/briefs" 2>/dev/null | grep -v '^\.' | head -5 | sed 's/^/- Brief masuk: /')
+        [ -n "$B" ] && echo "$B"
+        A=$(ls -1 "$WATCH_DIR/artifacts" 2>/dev/null | grep -v '^\.' | head -6 | sed 's/^/- Artifact: /')
+        [ -n "$A" ] && echo "$A"
+        F=$(ls -1 "$WATCH_DIR/final" 2>/dev/null | grep -v '^\.' | head -3 | sed 's/^/- Memo final: /')
+        [ -n "$F" ] && echo "$F"
+        [ -z "$B$A$F" ] && echo "- Workspace masih kosong"
+    else
+        FILES=$(ls -1 "$WATCH_DIR" 2>/dev/null | head -8 | sed 's/^/- Berkas: /')
+        [ -n "$FILES" ] && echo "$FILES"
+    fi
 else
     echo "- Folder kerja belum diatur (isi watch_folder di office.config.json)"
 fi

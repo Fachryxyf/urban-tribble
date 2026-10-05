@@ -29,6 +29,8 @@ STOPPED=0
 
 # 1. Folder watcher (file-watcher.py)
 pkill -f "file-watcher.py" 2>/dev/null && { echo -e "${GREEN}[ok]${RESET} Folder watcher stopped"; STOPPED=$((STOPPED + 1)); } || echo -e "${YELLOW}[skip]${RESET} Folder watcher not running"
+pkill -f "redteam-pipeline.py" 2>/dev/null && { echo -e "${GREEN}[ok]${RESET} Pipeline Red Team stopped"; STOPPED=$((STOPPED + 1)); } || echo -e "${YELLOW}[skip]${RESET} Pipeline Red Team not running"
+rm -f "$HOME/.agent-office/pipeline.lock"
 
 # 2. Chat watcher
 PID_FILE="$HOME/.agent-office/chat-watcher.pid"

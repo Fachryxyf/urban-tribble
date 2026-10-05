@@ -111,6 +111,16 @@ rm -f "$WATCHER_PID_FILE"
         echo -e "${YELLOW}[warn]${RESET} Watcher chat AI mungkin gagal mulai"
     fi
 
+# Start pipeline Red Team (brief -> 00..04 -> memo final)
+pkill -f "redteam-pipeline.py" 2>/dev/null || true
+rm -f "$HOME/.agent-office/pipeline.lock"
+if [ -d "$PROJECT_DIR/workspace/briefs" ]; then
+    echo -e "${CYAN}[...]${RESET} Menjalankan pipeline Red Team..."
+    python3 -u "$PROJECT_DIR/scripts/redteam-pipeline.py" --loop >> /tmp/urban-tribble-pipeline.log 2>&1 &
+    sleep 0.5
+    echo -e "${GREEN}[ok]${RESET} Pipeline Red Team aktif (folder workspace/briefs)"
+fi
+
 # Start folder watcher (event source: folder kerja lokal)
 pkill -f "file-watcher.py" 2>/dev/null || true
 WATCH_CFG=$(python3 -c "
@@ -122,7 +132,7 @@ except Exception:
     print('')")
 if [ -n "$WATCH_CFG" ] && [ -d "$WATCH_CFG" ]; then
     echo -e "${CYAN}[...]${RESET} Menjalankan watcher folder kerja: $WATCH_CFG"
-    python3 "$PROJECT_DIR/hooks/file-watcher.py" --loop >> /tmp/urban-tribble-file-watcher.log 2>&1 &
+    python3 -u "$PROJECT_DIR/hooks/file-watcher.py" --loop >> /tmp/urban-tribble-file-watcher.log 2>&1 &
     sleep 0.5
     echo -e "${GREEN}[ok]${RESET} Folder watcher aktif"
 else
@@ -138,6 +148,7 @@ echo -e "${GREEN}Urban Tribble Office berjalan!${RESET}"
 echo "  Kantor:  http://localhost:3333"
 echo "  Server:  http://localhost:3334"
 echo "  Chat AI: aktif/nonaktif dari UI"
+echo "  Brief  : taruh berkas .md/.pdf di workspace/briefs/"
 echo ""
 echo "Tekan Ctrl+C untuk menghentikan semua layanan"
 

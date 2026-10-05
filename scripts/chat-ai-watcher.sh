@@ -3,8 +3,8 @@
 # chat-ai-watcher.sh — Pantau chat kantor & balas sebagai Asisten AI
 # Di-start oleh start-office.sh, dihentikan oleh stop-office.sh
 #
-# Routing pesan ke divisi berdasarkan kata kunci:
-#   Keuangan, HRD, Admin, Sekretaris, Logistik, Pemasaran
+# Routing pesan ke role Red Team berdasarkan kata kunci:
+#   Ketua Tim, Pengacara Bantah, Analis Risiko, Penyelidik Fakta, Ekonom, Penulis Memo
 # =============================================================================
 
 set -u
@@ -44,8 +44,8 @@ while true; do
     # Hanya pesan manusia (bukan staf divisi/Asisten/sistem) — cegah loop balasan
     RESULT=$(echo "$RESPONSE" | python3 -c "
 import sys, json
-AI_SENDERS = ('claude','asisten','assistant','system','keuangan','hrd','admin',
-              'sekretaris','logistik','pemasaran','staff')
+AI_SENDERS = ('claude','asisten','assistant','system','ketua tim','pengacara bantah',
+              'analis risiko','penyelidik fakta','ekonom','penulis memo','staff')
 data = json.load(sys.stdin)
 msgs = data.get('messages', [])
 user_msgs = [m for m in msgs if m.get('sender','').lower() not in AI_SENDERS
@@ -76,23 +76,23 @@ if msgs:
     echo "[chat-ai] Pesan baru: $RESULT"
     touch "$LOCK_FILE"
 
-    # Routing kata kunci → divisi kantor
+    # Routing kata kunci → role Red Team
     AGENT_INFO=$(echo "$RESULT" | python3 -c "
 import sys
 msg = sys.stdin.read().lower()
 routes = [
-    (['invoice','laporan','anggaran','pengeluaran','pemasukan','pajak','rekap','gaji','biaya','transfer','neraca','kas','bayar','faktur','ppn'], 'keuangan', 'Keuangan'),
-    (['absensi','karyawan','cuti','rekrut','interview','wawancara','kontrak','shift','slip','hrd','pegawai','onboarding','lembur','karyawan baru'], 'hrd', 'HRD'),
-    (['surat','arsip','dokumen','formulir','stempel','ekspedisi','file','folder','scan','digitalisasi','kopi','berkas'], 'admin', 'Admin'),
-    (['jadwal','rapat','meeting','kalender','agenda','undangan','janji','appointment','reminder','reservasi'], 'sekretaris', 'Sekretaris'),
-    (['stok','gudang','kirim','kiriman','supplier','pengiriman','inventory','paket','kurir','barang','persediaan','delivery'], 'logistik', 'Logistik'),
-    (['kampanye','iklan','konten','sosmed','promo','leads','klien','brand','marketing','pemasaran','event','diskon','followers'], 'pemasaran', 'Pemasaran'),
+    (['asumsi','kenapa salah','bantah','lemah','kontra','cacat','bias'], 'pengacara', 'Pengacara Bantah'),
+    (['risiko','gagal','celah','bocor','ketergantungan','bottleneck','regulasi','eskalasi'], 'risiko', 'Analis Risiko'),
+    (['angka','klaim','kontradiksi','valid','sumber primer','akurasi','audit'], 'fakta', 'Penyelidik Fakta'),
+    (['biaya','rugi','untung','kelayakan','margin','cac','ltv','runway','breakeven','pendapatan'], 'ekonom', 'Ekonom'),
+    (['memo','ringkas','final','siap kirim','sintesis','eksekutif'], 'penulis', 'Penulis Memo'),
+    (['brief','fokus','rangkum','putuskan','arahan','mulai'], 'ketua', 'Ketua Tim'),
 ]
 for keywords, role, name in routes:
     if any(w in msg for w in keywords):
         print(f'{role}|{name}')
         sys.exit(0)
-print('assistant|Asisten')
+print('ketua|Ketua Tim')
 ")
     AGENT_ROLE=$(echo "$AGENT_INFO" | cut -d'|' -f1)
     AGENT_NAME=$(echo "$AGENT_INFO" | cut -d'|' -f2)
@@ -101,15 +101,27 @@ print('assistant|Asisten')
     echo "[chat-ai] Menyusun balasan..."
 
     SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
     OFFICE_CONTEXT=$(bash "$SCRIPT_DIR/gather-context.sh" 2>/dev/null || echo "")
 
-    # Aturan anti-slop (skills/antislop-copywriting) — dipakai supaya balasan tidak terasa AI-generated
-    SLOP_RULES="Gaya bahaya anti-AI-slop (WAJIB):
-- Tanpa emoji sama sekali. Pakai kata biasa.
-- Jangan mulai dengan 'Tentu', 'Baik', 'Pasti', 'Senang membantu'.
-- Jangan pakai klise: 'hal yang tepat', 'penting untuk dicatat', 'jangan ragu', 'semoga membantu', 'kesimpulannya'.
-- Langsung ke isi, kalimat pendek, nada manusia kantor Indonesia (santai, to the point).
-- Maksimal 15 kata, satu kalimat kalau bisa."
+    # Gaya Formal-Sarkastik global + skill Chat Voice per role (skills/roles/*.md)
+    SKILL_DIR="$PROJECT_DIR/skills/roles"
+    GLOBAL_RULES=""
+    [ -f "$SKILL_DIR/global.md" ] && GLOBAL_RULES=$(cat "$SKILL_DIR/global.md")
+
+    ROLE_SKILL=""
+    ROLE_FILE=""
+    case "$AGENT_ROLE" in
+        ketua)     ROLE_FILE="ketua.md" ;;
+        pengacara) ROLE_FILE="pengacara.md" ;;
+        risiko)    ROLE_FILE="risiko.md" ;;
+        fakta)     ROLE_FILE="fakta.md" ;;
+        ekonom)    ROLE_FILE="ekonom.md" ;;
+        penulis)   ROLE_FILE="penulis.md" ;;
+    esac
+    if [ -n "$ROLE_FILE" ] && [ -f "$SKILL_DIR/$ROLE_FILE" ]; then
+        ROLE_SKILL=$(awk '/^## 7\. Chat Voice/{f=1} f' "$SKILL_DIR/$ROLE_FILE")
+    fi
 
     PERSONA=""
     if [ -f "$HOME/.agent-office/claude-persona.md" ]; then
@@ -126,22 +138,33 @@ for m in msgs:
 
     PROMPT="$PERSONA
 
-$SLOP_RULES
+$GLOBAL_RULES
 
-Kamu merespons sebagai $AGENT_NAME, staf divisi $AGENT_ROLE di kantor Urban Tribble. Tetap dalam karakter, balas dalam Bahasa Indonesia.
+Kamu merespons sebagai $AGENT_NAME di kantor Urban Tribble, bagian dari tim analis internal (Red Team). Tetap dalam karakter.
+
+Skill peranmu (bagian Chat Voice):
+$ROLE_SKILL
 
 $OFFICE_CONTEXT
 
 Percakapan terakhir:
 $CONTEXT
 
-Balas pesan terbaru secara natural. Singkat (8-12 kata). Sambungkan dengan percakapan sebelumnya bila relevan."
+Balas pesan terbaru. Maksimal 25 kata. Bahasa Indonesia baku, nada Formal-Sarkastik, tanpa emoji, tanpa tanda hubung panjang, tanpa salam pembuka."
 
-    REPLY=$(printf '%s' "$PROMPT" | python3 "$SCRIPT_DIR/llm-reply.py" 2>/dev/null | tr '\n' ' ' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+    REPLY=$(printf '%s' "$PROMPT" | python3 "$SCRIPT_DIR/llm-reply.py" --role "$AGENT_ROLE" 2>/dev/null | tr '\n' ' ' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
 
     [ -z "$REPLY" ] && { echo "[chat-ai] Balasan kosong, dilewati"; rm -f "$LOCK_FILE"; continue; }
 
-    REPLY=$(echo "$REPLY" | python3 -c "import sys; w=sys.stdin.read().strip().split(); print(' '.join(w[:15]))")
+    case "$REPLY" in
+        INTEROGASI:*)
+            REPLY=$(echo "$REPLY" | sed 's/^INTEROGASI:[[:space:]]*//')
+            REPLY=$(echo "$REPLY" | python3 -c "import sys; w=sys.stdin.read().strip().split(); print(' '.join(w[:160]))")
+            ;;
+        *)
+            REPLY=$(echo "$REPLY" | python3 -c "import sys; w=sys.stdin.read().strip().split(); print(' '.join(w[:25]))")
+            ;;
+    esac
 
     # Jangan posting pesan error CLI sebagai balasan staf
     case "$REPLY" in

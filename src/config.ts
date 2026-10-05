@@ -30,12 +30,12 @@ export const BOSS_ICON = bossIcon
 // Peta role → nama dasar sprite karakter (di /sprites/characters/)
 export const ROLE_TO_CHAR: Record<string, string> = {
   'boss':                  bossSprite,
-  'assistant':             'Claude-1',
-  'keuangan':              'employee-1',
-  'hrd':                   'employee-2',
-  'admin':                 'employee-3',
-  'sekretaris':            'Frontend-dev-1',
-  'logistik':              'dev-1',
-  'pemasaran':             'dev-2',
-  'staff':                 'explore-1',
+  'assistant':             'dev-2',
+  'ketua':                 'Claude-1',
+  'pengacara':             'security-audit-1',
+  'risiko':                'dev-1',
+  'fakta':                 'explore-1',
+  'ekonom':                'employee-1',
+  'penulis':               'Frontend-dev-1',
+  'staff':                 'employee-3',
 }

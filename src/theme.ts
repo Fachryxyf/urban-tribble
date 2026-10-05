@@ -235,19 +235,37 @@ export function themedWater(): string  { return pick(state.name === 'office' ? O
 // ===== SIM / VIDEO MODE OFFICE SCRIPT =====
 // Parallel tool-output messages keyed by role — used when ?sim or ?video loads with Office theme.
 export const OFFICE_SIM_TOOL_MESSAGES: Record<string, string[]> = {
-  'keuangan': [
+  'ketua': [
     'rekap invoice bulan Maret...',
     'ada angka nyasar di laporan — kayaknya salah ketik',
     'budget kopi habis. lagi. klasik.',
     'cek ulang sebelum Toby... eh, sebelum direksi tahu',
   ],
-  'hrd': [
+  'fakta': [
     'absen pagi dicek satu-satu',
     '3 pengajuan cuti menunggu approval',
     'kandidat interview sore nanti — 2 orang',
     'slip gaji sudah dibagikan, stanley komplain lagi',
   ],
-  'admin': [
+  'pengacara': [
+    'klien setuju dengan presentasinya sendiri. wajar.',
+    'tim produk bangga dengan fitur yang tidak dipakai siapa pun',
+    'asumsi loyalitas pelanggan diajukan tanpa data loyalitas',
+    'kompetitor sudah dibilang tidak akan bereaksi. yakin sekali',
+  ],
+  'risiko': [
+    'satu vendor menanggung seluruh alur transaksi. tenang saja',
+    'dokumen SLA belum ditandatangani, tapi jadwal rilis tetap dipaksa',
+    'kata sandi produksi masih satu tim. keamanan kelas satu',
+    'backup terakhir belum pernah diuji pulih. anggap saja ada',
+  ],
+  'penulis': [
+    'memo ditahan, berkas analis belum lengkap',
+    'kata mungkin saya hapus dari draft. perintah harus tegas',
+    'halaman pertama sudah memutuskan nasib proyek',
+    'versi final dikunci. revisi lewat pintu depan',
+  ],
+  'ekonom': [
     'arsip surat masuk diproses',
     'cetak & stempel beres',
     'filing dokumen vendor sudah rapi',
