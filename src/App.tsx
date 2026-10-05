@@ -2,6 +2,8 @@ import React, { useState, useEffect, useCallback, useRef, lazy, Suspense } from 
 import './styles/office.css'
 import './styles/rooms.css'
 import SlackChat, { ChatMessage } from './components/SlackChat'
+import BriefDrawer from './components/BriefDrawer'
+import Icon from './components/Icon'
 import Character from './components/Character'
 import FurnitureRenderer from './components/FurnitureRenderer'
 import { Agent, OfficeEvent, AGENT_CONFIGS } from './types'
@@ -294,6 +296,7 @@ const App: React.FC = () => {
   const [muted, setMuted] = useState(false)
   const [dayPhase, setDayPhase] = useState<DayPhase>(getCurrentPhase())
   const [dayNightMode, setDayNightMode] = useState<'auto' | 'day' | 'night'>('auto')
+  const [briefOpen, setBriefOpen] = useState(false)
 
   // Compressed day cycle: 10 min = 24 hours
   // nightOpacity: 0 = full day, 1 = full night
@@ -1806,6 +1809,14 @@ const App: React.FC = () => {
         <div className="title-bar-dot" style={{ background: '#28c840' }} />
         <span className="title-bar-text">URBAN TRIBBLE - RED TEAM OFFICE</span>
         <button
+          className="title-bar-brief"
+          onClick={() => setBriefOpen(true)}
+          title="Ajukan brief baru"
+        >
+          <Icon name="doc" size={9} />
+          <span>BRIEF</span>
+        </button>
+        <button
           className="title-bar-daynight"
           onClick={() => setDayNightMode(prev =>
             prev === 'auto' ? 'day': prev === 'day' ? 'night' :  'auto'
@@ -1969,6 +1980,14 @@ const App: React.FC = () => {
             m.id === messageId ? { ...m, reactions } : m
           ))
         }}
+      />
+
+      <BriefDrawer
+        open={briefOpen}
+        onClose={() => setBriefOpen(false)}
+        onSent={(file) =>
+          addMsg('system', 'default', '#8b8d91', `brief ${file} terkirim. Ketua Tim mulai membacanya.`, true)
+        }
       />
       </div>
     </div>

@@ -188,6 +188,41 @@ app.get('/roster', (_req, res) => {
  *   { type: "mcp_call",        server, tool, agentId? }
  *   { type: "mcp_done",        server, agentId? }
  */
+// ---------------------------------------------------------------------------
+// Laci Brief — terima formulir dari UI, tulis ke workspace/briefs/
+// ---------------------------------------------------------------------------
+function briefDir() {
+  try {
+    const cfg = JSON.parse(readFileSync(join(__dirname, '..', 'office.config.json'), 'utf8'))
+    const base = cfg.watch_folder || join(__dirname, '..', 'workspace')
+    return join(base, 'briefs')
+  } catch {
+    return join(__dirname, '..', 'workspace', 'briefs')
+  }
+}
+
+app.post('/brief', (req, res) => {
+  const body = req.body ?? {}
+  const title = String(body.title ?? '').trim().slice(0, 120)
+  const content = String(body.content ?? '').trim().slice(0, 60000)
+  if (!title || !content) {
+    return res.status(400).json({ ok: false, error: 'Judul dan isi brief wajib diisi.' })
+  }
+  try {
+    const dir = briefDir()
+    mkdirSync(dir, { recursive: true })
+    const slug = title.toLowerCase()
+      .normalize('NFKD').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '')
+      .slice(0, 60) || 'brief'
+    const file = join(dir, `brief_${Date.now()}-${slug}.md`)
+    writeFileSync(file, content, 'utf8')
+    console.log(`[brief] ${file} diterima dari UI`)
+    return res.json({ ok: true, file: file.split('/').pop() })
+  } catch (e) {
+    return res.status(500).json({ ok: false, error: String(e && e.message || e) })
+  }
+})
+
 app.post('/event', (req, res) => {
   // Auth check
   const authHeader = req.headers['authorization' ] ?? ''
