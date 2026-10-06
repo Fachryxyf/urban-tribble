@@ -28,7 +28,7 @@ export const ASSETS: Record<string, SpriteAsset> = {
   'desk-standing-left-rear':   { path: '/sprites/furniture/standing-desk-left-rear.png', width: 84, height: 102, category: 'furniture' },
   'desk-standing-right-front': { path: '/sprites/furniture/standing-desk-right-front.png', width: 84, height: 106, category: 'furniture' },
   'desk-standing-right-rear':  { path: '/sprites/furniture/standing-desk-right-rear.png', width: 84, height: 102, category: 'furniture' },
-  'meeting-table':             { path: '/sprites/furniture/meeting-table.png', width: 244, height: 140, category: 'furniture' },
+  'meeting-table':             { path: '/sprites/furniture/meeting-table.png', width: 298, height: 157, category: 'furniture' },
   // Filing cabinet: 312x422 → ~52x70, scaled 1.2x
   'filing-closed':             { path: '/sprites/furniture/filling-closed.png', width: 42, height: 56, category: 'furniture' },
   'filing-open':               { path: '/sprites/furniture/filling-open.png', width: 46, height: 60, category: 'furniture' },

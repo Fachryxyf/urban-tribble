@@ -86,7 +86,7 @@ const FurnitureRenderer: React.FC<FurnitureRendererProps> = ({ items, onItemClic
               style={{
                 height: h,
                 width: 'auto',
-                imageRendering: 'pixelated',
+                imageRendering: item.type === 'meeting-table' ? 'auto' : 'pixelated',
                 display: 'block',
                 filter: 'drop-shadow(0 0 0.5px #000) drop-shadow(0 0 0.5px #000)',
               }}

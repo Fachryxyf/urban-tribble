@@ -142,7 +142,7 @@ export function getRoomImage(phase: 'day' | 'night'): string {
   if (state.name === 'office') {
     return phase === 'night' ? '/rooms/office-night-dm.png' :  '/rooms/office-day-dm.png'
   }
-  return phase === 'night' ? '/rooms/office-night.png' :  '/rooms/office-day.png'
+  return phase === 'night' ? '/rooms/rapat-night.png' :  '/rooms/rapat-day.png'
 }
 
 /** Returns the ROLE currently cast as Angela (if any), plus cat sprite path. */

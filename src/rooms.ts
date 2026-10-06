@@ -81,8 +81,8 @@ export const ROOMS: Record<RoomId, Room> = {
     name: 'Main Office',
     description: 'Open plan workspace where agents code, debug, and ship',
     background: {
-      day: '/rooms/office-day.png',
-      night: '/rooms/office-night.png',
+      day: '/rooms/rapat-day.png',
+      night: '/rooms/rapat-night.png',
     },
     width: 800,
     height: 600,
@@ -96,7 +96,7 @@ export const ROOMS: Record<RoomId, Room> = {
       { id: 'desk-2b', type: 'desk-standing', sprite: 'desk-standing-left-front', x: 35.4, y: 67.5 },
       { id: 'desk-2c', type: 'desk-standing', sprite: 'desk-standing-right-front', x: 27.9, y: 70 },
       // Meja rapat Red Team (menggantikan kluster meja kanan)
-      { id: 'meeting-table', type: 'meeting-table', sprite: 'meeting-table', x: 60, y: 84, label: 'Meja Rapat Red Team' },
+      { id: 'meeting-table', type: 'meeting-table', sprite: 'meeting-table', x: 60, y: 84.24, zIndex: 50, label: 'Meja Rapat Red Team' },
       // Coffee machine on counter
       { id: 'coffee', type: 'coffee-machine', sprite: 'coffee-off', x: 78.5, y: 50.2, interactive: true, state: 'off', label: 'Coffee Machine' },
       // Filing cabinet
@@ -124,15 +124,15 @@ export const ROOMS: Record<RoomId, Room> = {
       // In front of desk: rear-left/rear-right (z higher than desk)
       // Behind desk: front-left/front-right (z lower than desk)
       // Front-left cluster: desks at y ~65-70
-      { id: 'spot-1', type: 'desk', x: 60, y: 61.5, facing: 'down', spriteFacing: 'front-right' },
-      { id: 'spot-2', type: 'desk', x: 60, y: 89.5, facing: 'down', spriteFacing: 'rear-left' },
+      { id: 'spot-1', type: 'desk', x: 60, y: 53.3, facing: 'down', spriteFacing: 'front-right' },
+      { id: 'spot-2', type: 'desk', x: 60, y: 86.2, facing: 'down', spriteFacing: 'rear-left' },
       // Kursi rapat Red Team: 6 staf mengelilingi meja, menghadap ke dalam
-      { id: 'spot-m1', type: 'desk', x: 54, y: 61.5, facing: 'down', spriteFacing: 'front-right' },
-      { id: 'spot-m2', type: 'desk', x: 66, y: 61.5, facing: 'down', spriteFacing: 'front-left' },
-      { id: 'spot-m3', type: 'desk', x: 41, y: 75, facing: 'down', spriteFacing: 'rear-right' },
-      { id: 'spot-m4', type: 'desk', x: 79, y: 75, facing: 'down', spriteFacing: 'rear-left' },
-      { id: 'spot-m5', type: 'desk', x: 54, y: 89.5, facing: 'down', spriteFacing: 'rear-right' },
-      { id: 'spot-m6', type: 'desk', x: 66, y: 89.5, facing: 'down', spriteFacing: 'rear-left' },
+      { id: 'spot-m1', type: 'desk', x: 48.4, y: 62.6, facing: 'down', spriteFacing: 'front-right' },
+      { id: 'spot-m2', type: 'desk', x: 71.5, y: 61.5, facing: 'down', spriteFacing: 'front-left' },
+      { id: 'spot-m3', type: 'desk', x: 48.5, y: 78, facing: 'down', spriteFacing: 'rear-right' },
+      { id: 'spot-m4', type: 'desk', x: 71.6, y: 77, facing: 'down', spriteFacing: 'rear-left' },
+      { id: 'spot-m5', type: 'desk', x: 38.5, y: 70.4, facing: 'down', spriteFacing: 'rear-right' },
+      { id: 'spot-m6', type: 'desk', x: 81.5, y: 68.7, facing: 'down', spriteFacing: 'front-left' },
       { id: 'spot-3', type: 'desk', x: 26.9, y: 59.2, facing: 'down', spriteFacing: 'front-left', zIndex: 40 },
       // Back cluster: desks at y ~50-55
       { id: 'spot-4', type: 'desk', x: 38.5, y: 55.2, facing: 'down', spriteFacing: 'rear-left', zIndex: 58 },
@@ -210,12 +210,12 @@ export const ROOMS: Record<RoomId, Room> = {
       { id: 'W-spot-2',    x: 37.9, y: 68.2, connections: ['W-spot-1', 'W-spot-4', 'W-new-2' ] },
       { id: 'W-coffee-1',  x: 73.5, y: 56.7, connections: ['W-door-3', 'W-coffee-2' , 'W-m-top' ] },
       { id: 'W-coffee-2',  x: 76.2, y: 58.4, connections: ['W-coffee-1', 'W-printer' ] },
-      { id: 'W-printer',   x: 81,   y: 63,   connections: ['W-coffee-2', 'W-new-23' ] },
+      { id: 'W-printer',   x: 81,   y: 63,   connections: ['W-coffee-2' ] },
       // Jalur rapat Red Team (mengelilingi meja, tidak menyeberangi permukaan)
-      { id: 'W-m-top',     x: 60,   y: 57.5, connections: ['W-filing', 'W-coffee-1', 'W-m-left', 'W-m-right' ] },
-      { id: 'W-m-left',    x: 37.5, y: 77,   connections: ['W-new-14', 'W-m-top', 'W-m-bottom' ] },
-      { id: 'W-m-right',   x: 83,   y: 77,   connections: ['W-new-22', 'W-m-top', 'W-m-bottom' ] },
-      { id: 'W-m-bottom',  x: 60,   y: 93,   connections: ['W-m-left', 'W-m-right' ] },
+      { id: 'W-m-top',     x: 60,   y: 50,   connections: ['W-filing', 'W-coffee-1', 'W-m-left', 'W-m-right' ] },
+      { id: 'W-m-left',    x: 37.5, y: 74,   connections: ['W-new-14', 'W-m-top', 'W-m-bottom' ] },
+      { id: 'W-m-right',   x: 79,   y: 72.5, connections: ['W-new-22', 'W-m-top', 'W-m-bottom' ] },
+      { id: 'W-m-bottom',  x: 60,   y: 87.5, connections: ['W-m-left', 'W-m-right' ] },
       // Aisle junctions
       { id: 'W-new-1',     x: 44.8, y: 63.1, connections: ['W-new-3' ] },
       { id: 'W-new-2',     x: 57.5, y: 51.6, connections: ['W-spot-2', 'W-new-5' ] },
@@ -234,7 +234,6 @@ export const ROOMS: Record<RoomId, Room> = {
       { id: 'W-new-19',    x: 18.3, y: 57.7, connections: ['W-spot-4' ] },
       { id: 'W-new-20',    x: 38.8, y: 54.2, connections: ['W-new-18' ] },
       { id: 'W-new-22',    x: 76.3, y: 70.5, connections: ['W-new-24' , 'W-m-right' ] },
-      { id: 'W-new-23',    x: 66.8, y: 75.6, connections: ['W-printer' ] },
       { id: 'W-new-24',    x: 81.3, y: 62.5, connections: ['W-new-22' ] },
     ],
   },

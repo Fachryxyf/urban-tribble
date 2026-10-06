@@ -1552,8 +1552,9 @@ const App: React.FC = () => {
       })
 
       // Prune completed agents at the door (never prune the boss)
-      const pruned = next.filter(a => {
-        if (a.id === BOSS_ID || a.id === CLAUDE_ID) return true
+      const pruneIds = new Set<string>()
+      for (const a of next) {
+        if (a.id === BOSS_ID || a.id === CLAUDE_ID) continue
         if (a.state === 'completed') {
           const atDoor = (
             Math.abs(a.position.x - DOOR_TARGET.x) < ARRIVAL_THRESHOLD * 2 &&
@@ -1561,14 +1562,17 @@ const App: React.FC = () => {
           )
           if (atDoor) {
             agentMetaRef.current.delete(a.id)
-            return false
+            pruneIds.add(a.id)
           }
         }
-        return true
-      })
+      }
 
-      if (changed || pruned.length !== next.length) {
-        setAgents(pruned)
+      if (changed || pruneIds.size > 0) {
+        const moved = new Map(next.map(a => [a.id, a] as const))
+        setAgents(cur => {
+          const merged = cur.map(a => moved.get(a.id) ?? a)
+          return merged.filter(a => !pruneIds.has(a.id))
+        })
       }
 
       rafId = requestAnimationFrame(tick)
