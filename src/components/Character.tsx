@@ -137,7 +137,8 @@ const Character: React.FC<CharacterProps> = ({ agent, idleDurationMs = 0, zIndex
       style={{
         left: `${agent.position.x}%`,
         top: `${agent.position.y}%`,
-        transform: 'translate(-50%, -100%)',
+        transform: 'translate(-50%, -100%) scale(var(--scene-scale, 1))',
+        transformOrigin: '50% 100%',
         zIndex: zIndex ?? Math.round(agent.position.y),
       }}
     >

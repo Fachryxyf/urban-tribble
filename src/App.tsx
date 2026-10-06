@@ -297,6 +297,19 @@ const App: React.FC = () => {
   const [dayPhase, setDayPhase] = useState<DayPhase>(getCurrentPhase())
   const [dayNightMode, setDayNightMode] = useState<'auto' | 'day' | 'night'>('auto')
   const [briefOpen, setBriefOpen] = useState(false)
+  const [sceneScale, setSceneScale] = useState(1)
+  const roomRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const el = roomRef.current
+    if (!el) return
+    const ro = new ResizeObserver(entries => {
+      const w = entries[0].contentRect.width
+      if (w > 0) setSceneScale(w / 754)
+    })
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [])
 
   // Compressed day cycle: 10 min = 24 hours
   // nightOpacity: 0 = full day, 1 = full night
@@ -1835,13 +1848,9 @@ const App: React.FC = () => {
       <div className="app-body">
       <div className="office-view">
         <div
+          ref={roomRef}
           className={`room-container${flickering ? 'flickering' :  '' }`}
-          style={{
-            aspectRatio: '4800/3584',
-            width: '100%',
-            maxHeight: '100%',
-            position: 'relative',
-          }}
+          style={{ '--scene-scale': sceneScale } as React.CSSProperties}
         >
           {/* Room backgrounds — both rendered, night crossfades via opacity. Theme swaps source art. */}
           <div
